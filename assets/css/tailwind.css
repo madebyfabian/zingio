@@ -3,20 +3,31 @@
 @tailwind utilities;
 
 @layer base {
+	:root {
+		@apply scroll-smooth;
+	}
+
 	body,
 	#__nuxt {
 		@apply min-h-screen;
 	}
 
+	body {
+		@apply overflow-x-hidden overflow-y-scroll;
+	}
+
 	h1 {
 		@apply text-2xl font-bold;
 	}
+
 	h2 {
 		@apply text-xl font-bold;
 	}
+
 	input {
 		@apply block px-3 py-2 border-gray-300 border rounded-md;
 	}
+
 	button {
 		@apply block px-4 py-1.5 rounded-full;
 
@@ -28,6 +39,7 @@
 			@apply bg-white border border-gray-200 text-gray-700 shadow-sm;
 		}
 	}
+
 	pre {
 		@apply bg-gray-200 p-4 rounded-lg;
 		font-size: 10px;

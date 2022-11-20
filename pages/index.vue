@@ -9,4 +9,8 @@
 	import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
 	const currentUserStore = useCurrentUserStore()
 	const currentUser = computed(() => currentUserStore.currentUser)
+
+	definePageMeta({
+		middleware: 'auth',
+	})
 </script>
