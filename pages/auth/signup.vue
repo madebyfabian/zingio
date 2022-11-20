@@ -1,6 +1,6 @@
 <template>
 	<div class="flex flex-col gap-4 justify-center min-h-[80vh] items-center">
-		<h1>Welcome back! Sign in.</h1>
+		<h1>Signup</h1>
 		<form @submit.prevent="handleSubmit" class="w-64 flex flex-col gap-2">
 			<input
 				type="text"
@@ -15,13 +15,13 @@
 				class="w-full"
 			/>
 			<div class="flex flex-col gap-4 mt-4">
-				<button type="submit">Sign In</button>
+				<button type="submit">Signup</button>
 				<button
 					data-type="secondary"
 					type="button"
-					@click="() => $router.push('/auth/signup')"
+					@click="() => $router.push('/auth/signin')"
 				>
-					Create an account
+					Already have an Account?
 				</button>
 			</div>
 		</form>
@@ -50,7 +50,7 @@
 	})
 
 	const handleSubmit = async () => {
-		const { data, error } = await supabase.auth.signInWithPassword({
+		const { data, error } = await supabase.auth.signUp({
 			email: state.email,
 			password: state.password,
 		})
