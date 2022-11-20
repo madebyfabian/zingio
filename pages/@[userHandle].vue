@@ -10,10 +10,8 @@
 			</button>
 		</div>
 		<p class="mt-0 font-normal text-gray-500">@{{ userDetails?.handle }}</p>
-		<pre>userDetails: {{ userDetails }}</pre>
-		<hr />
-		<div class="mt-8">
-			<h2>Posts:</h2>
+		<hr class="my-10" />
+		<div>
 			<div v-if="!pendingUserPosts">
 				<Post
 					v-for="post of userPosts"

@@ -13,7 +13,12 @@
 		<template v-if="!isDeleted">
 			<UserLink v-if="props.post.authorUser" :user="props.post.authorUser" />
 
-			<p class="mt-4" :class="{ 'text-xl': props.type === 'detail' }">
+			<p
+				:class="{
+					'text-xl mt-3 mb-5': props.type === 'detail',
+					'mt-2': props.type === 'feed',
+				}"
+			>
 				{{ props.post.content }}
 			</p>
 
