@@ -19,6 +19,7 @@ const tables = [
       },
       { name: "updatedAt", type: "datetime" },
       { name: "isCommentOf", type: "link", link: { table: "post" } },
+      { name: "isDeleted", type: "bool", notNull: true, defaultValue: "false" },
     ],
   },
   {

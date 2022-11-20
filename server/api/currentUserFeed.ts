@@ -23,6 +23,7 @@ export default defineEventHandler(async event => {
 		.select(['*', 'authorUser.*'])
 		.filter({
 			authorUser: { id: { $any: usersFollowingIds } },
+			isDeleted: false,
 			$notExists: 'isCommentOf',
 		})
 		.sort('createdAt', 'desc')

@@ -13,6 +13,7 @@ export default defineEventHandler(async event => {
 		.select(['*', 'authorUser.*'])
 		.filter({
 			authorUser: { handle: query.userHandle },
+			isDeleted: false,
 			$notExists: 'isCommentOf',
 		})
 		.sort('createdAt', 'desc')

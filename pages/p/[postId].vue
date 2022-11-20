@@ -5,23 +5,13 @@
 			:post="data.post"
 			:postLikes="data.postLikes"
 			@like="refresh"
+			@requestRefresh="refresh"
 			@openCommentForm="() => (state.isCommentFormOpen = true)"
 			:postCommentsCount="data.postComments?.length"
 			type="detail"
 		/>
 
-		<hr />
-
 		<section class="ml-6">
-			<div v-if="data?.postComments">
-				<Post
-					v-for="postComment of data.postComments"
-					:key="postComment.id"
-					:post="postComment"
-					type="feed"
-				/>
-			</div>
-
 			<div v-if="state.isCommentFormOpen">
 				<section class="bg-gray-100 p-6 my-6 rounded-xl">
 					<PostCreateForm
@@ -30,7 +20,15 @@
 						@cancel="() => (state.isCommentFormOpen = false)"
 					/>
 				</section>
-				<hr />
+			</div>
+
+			<div v-if="data?.postComments" class="mt-6">
+				<Post
+					v-for="postComment of data.postComments"
+					:key="postComment.id"
+					:post="postComment"
+					type="feed"
+				/>
 			</div>
 		</section>
 	</div>

@@ -4,41 +4,54 @@
 		:role="isLink ? 'link' : undefined"
 		@click.capture="handleElementClick"
 		@keydown.capture.enter="handleElementClick"
-		class="Post block py-4 bg-gray-100 rounded-xl p-6 mb-6"
+		class="Post block bg-white border border-gray-200 rounded-xl p-6 mb-6"
 		:class="{
 			'cursor-pointer': isLink,
+			'shadow-lg': !isLink,
 		}"
 	>
-		<UserLink v-if="props.post.authorUser" :user="props.post.authorUser" />
+		<template v-if="!isDeleted">
+			<UserLink v-if="props.post.authorUser" :user="props.post.authorUser" />
 
-		<p class="mt-4" :class="{ 'text-xl': props.type === 'detail' }">
-			{{ props.post.content }}
-		</p>
+			<p class="mt-4" :class="{ 'text-xl': props.type === 'detail' }">
+				{{ props.post.content }}
+			</p>
 
-		<div
-			v-if="props.type === 'detail'"
-			class="flex gap-3 items-center mt-4 text-sm empty:hidden"
-		>
-			<button
-				@click="handlePostLike"
-				:data-type="isLikedByCurrUser ? 'secondary' : 'primary'"
-				class="gap-1"
-			>
-				👍 Like —
-				<span class="font-bold">{{ props.postLikes?.length }}</span>
-			</button>
+			<nav v-if="props.type === 'detail'" class="flex justify-between mt-4">
+				<div class="flex gap-3 items-center">
+					<button
+						@click="handlePostLike"
+						:data-type="isLikedByCurrUser ? 'secondary' : 'primary'"
+						class="gap-1"
+					>
+						👍 Like —
+						<span class="font-bold">{{ props.postLikes?.length }}</span>
+					</button>
 
-			<button
-				@click="() => emit('openCommentForm')"
-				data-type="secondary"
-				class="gap-1"
-			>
-				💬 Comment —
-				<span>{{ props.postCommentsCount }}</span>
-			</button>
-		</div>
+					<button
+						@click="() => emit('openCommentForm')"
+						data-type="secondary"
+						class="gap-1"
+					>
+						💬 Comment —
+						<span>{{ props.postCommentsCount }}</span>
+					</button>
+				</div>
 
-		<pre v-if="props.type === 'detail'" class="mt-4">{{ post }}</pre>
+				<div class="flex gap-3 items-center">
+					<button
+						v-if="authUser?.id === props.post.authorUser?.authId"
+						@click="handleDeletePost"
+						data-type="secondary"
+						class="gap-1"
+					>
+						🗑️ Löschen
+					</button>
+				</div>
+			</nav>
+		</template>
+
+		<div v-else class="italic">This post has been deleted.</div>
 	</article>
 </template>
 
@@ -59,8 +72,11 @@
 
 	const emit = defineEmits<{
 		(e: 'like'): void
+		(e: 'requestRefresh'): void
 		(e: 'openCommentForm'): void
 	}>()
+
+	const isDeleted = computed(() => !!props.post.isDeleted)
 
 	const isLink = computed(() => {
 		return props.type === 'feed'
@@ -98,5 +114,23 @@
 		return emit('like')
 	}
 
-	const handlePostComment = () => {}
+	const handleDeletePost = async () => {
+		const { data, error } = await useFetch('/api/postDelete', {
+			method: 'POST',
+			// @ts-expect-error - this is a valid option
+			headers: useRequestHeaders(['cookie']),
+			body: {
+				post: {
+					authorUser: {
+						id: currentUser.value?.id,
+						authId: authUser.value?.id,
+					},
+					id: props.post.id,
+				},
+			},
+		})
+		if (error.value || !data.value) return console.error(error)
+
+		return emit('requestRefresh')
+	}
 </script>

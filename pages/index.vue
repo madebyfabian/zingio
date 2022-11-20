@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<h1>Welcome back, {{ currentUser?.name }}</h1>
+		<h1 class="mb-4">Welcome back, {{ currentUser?.name }}</h1>
 
 		<section v-if="!currentUserFeedPending">
 			<Post

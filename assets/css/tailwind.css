@@ -30,7 +30,7 @@
 	}
 
 	button {
-		@apply px-4 h-8 flex items-center justify-center rounded-full;
+		@apply px-4 h-8 flex items-center justify-center rounded-full text-sm;
 
 		&:not([data-type='secondary']) {
 			@apply bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-md text-white;
