@@ -4,7 +4,7 @@
 		:role="isLink ? 'link' : undefined"
 		@click.capture="handleElementClick"
 		@keydown.capture.enter="handleElementClick"
-		class="Post block py-4 bg-gray-100 rounded-xl p-6 my-6"
+		class="Post block py-4 bg-gray-100 rounded-xl p-6 mb-6"
 		:class="{
 			'cursor-pointer': isLink,
 		}"
