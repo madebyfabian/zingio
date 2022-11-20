@@ -12,18 +12,18 @@
 	>
 		<template v-if="!isDeleted">
 			<UserLink
-				v-if="props.post.authorUser"
-				:user="props.post.authorUser"
+				v-if="postState.authorUser"
+				:user="postState.authorUser"
 				asButton
 			/>
 
 			<p
 				:class="{
-					'text-xl mt-3 mb-5': props.type === 'detail',
-					'mt-2': props.type === 'feed',
+					'text-xl mt-3 mb-5': _props.type === 'detail',
+					'mt-2': _props.type === 'feed',
 				}"
 			>
-				{{ props.post.content }}
+				{{ postState.content }}
 			</p>
 
 			<nav class="flex justify-between mt-4">
@@ -34,7 +34,7 @@
 						class="gap-1"
 					>
 						👍 Like —
-						<span class="font-bold">{{ props.post.countTotalLikes }}</span>
+						<span class="font-bold">{{ postState.countTotalLikes }}</span>
 					</button>
 
 					<button
@@ -43,14 +43,14 @@
 						class="gap-1"
 					>
 						💬 Comment —
-						<span>{{ props.post.countTotalComments }}</span>
+						<span>{{ postState.countTotalComments }}</span>
 					</button>
 				</div>
 
 				<div class="flex gap-3 items-center">
 					<button
-						v-if="authUser?.id === props.post.authorUser?.authId"
-						@click="handleDeletePost"
+						v-if="authUser?.id === postState.authorUser?.authId"
+						@click.stop="handleDeletePost"
 						data-type="secondary"
 						class="gap-1"
 					>
@@ -82,7 +82,7 @@
 	const router = useRouter()
 	const authUser = useAuthUser()
 
-	const props = defineProps<{
+	const _props = defineProps<{
 		post: SelectedPick<PostRecord, ('*' | 'authorUser.*')[]> & {
 			currentUser?: { hasLiked?: boolean }
 		}
@@ -94,30 +94,43 @@
 		(e: 'openCommentForm'): void
 	}>()
 
-	const isDeleted = computed(() => !!props.post.isDeleted)
+	const postState = useState<typeof _props.post>(
+		`postState:${_props.post.id}`,
+		() => JSON.parse(JSON.stringify(_props.post))
+	)
+	watch(
+		() => _props.post,
+		newPost => {
+			postState.value = JSON.parse(JSON.stringify(newPost))
+		},
+		{ deep: true }
+	)
 
-	const isLink = computed(() => {
-		return props.type === 'feed'
-	})
-
-	const isLikedByCurrUser = computed(() => {
-		return !!props.post?.currentUser?.hasLiked
-	})
+	const isDeleted = computed(() => Boolean(postState.value.isDeleted))
+	const isLink = computed(() => _props.type === 'feed')
+	const isLikedByCurrUser = computed(() =>
+		Boolean(postState.value?.currentUser?.hasLiked)
+	)
 
 	const handleElementClick = (e: Event) => {
 		e.stopPropagation()
 		if (isLink.value) {
-			router.push(`/p/${props.post.id}`)
+			router.push(`/p/${postState.value.id}`)
 		}
 	}
 
 	const handlePostLike = async () => {
+		const newState = !isLikedByCurrUser.value
+		if (typeof postState.value?.currentUser?.hasLiked === 'boolean')
+			postState.value.currentUser.hasLiked = newState
+		postState.value.countTotalLikes += newState ? 1 : -1
+
 		const { data, error } = await useFetch('/api/currentUserPostLike', {
 			method: 'POST',
 			// @ts-expect-error - this is a valid option
 			headers: useRequestHeaders(['cookie']),
 			body: {
-				postId: props.post.id,
+				postId: postState.value.id,
 				user: {
 					id: currentUser.value?.id,
 					authId: authUser.value?.id,
@@ -125,8 +138,6 @@
 			},
 		})
 		if (error.value || !data.value) return console.error(error)
-
-		return emit('requestRefresh')
 	}
 
 	const handleDeletePost = async () => {
@@ -140,7 +151,7 @@
 						id: currentUser.value?.id,
 						authId: authUser.value?.id,
 					},
-					id: props.post.id,
+					id: postState.value.id,
 				},
 			},
 		})
