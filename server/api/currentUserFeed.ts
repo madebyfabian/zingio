@@ -6,7 +6,6 @@ const nonNullable = <T>(value: T): value is NonNullable<T> => {
 }
 
 export default defineEventHandler(async event => {
-	console.log('handler:init')
 	const serverAuthUser = await useServerAuthUser(event)
 	if (!serverAuthUser) return sendError(event, createError({ statusCode: 401 }))
 
