@@ -1,10 +1,10 @@
 <template>
 	<div class="py-8 h-full border-r border-gray-200">
 		<NuxtLink
-			class="font-black text-3xl tracking-tight text-emerald-600 inline-block"
+			class="font-black text-3xl tracking-tight text-gray-600 inline-block"
 			to="/"
 		>
-			timmo<span class="opacity-50">.</span>
+			<span class="text-2xl">💬</span> timmo<span class="opacity-50">.</span>
 		</NuxtLink>
 
 		<hr class="my-8" />
