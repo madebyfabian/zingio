@@ -26,5 +26,7 @@ export default defineEventHandler(async event => {
 	})
 	if (!updatedRecord) return sendError(event, createError({ statusCode: 500 }))
 
+	/** @TODO delete likes */
+
 	return updatedRecord
 })
