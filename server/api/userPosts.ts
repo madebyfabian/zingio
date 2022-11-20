@@ -1,5 +1,6 @@
 import { z, useValidatedQuery } from 'h3-zod'
 import { xata } from '@/server/lib/xata'
+import { getPostList } from '@/server/utils/getPostList'
 
 export default defineEventHandler(async event => {
 	const query = useValidatedQuery(
@@ -9,7 +10,7 @@ export default defineEventHandler(async event => {
 		})
 	)
 
-	const userPosts = await xata.db.post
+	const userPostsRaw = await xata.db.post
 		.select(['*', 'authorUser.*'])
 		.filter({
 			authorUser: { handle: query.userHandle },
@@ -19,5 +20,8 @@ export default defineEventHandler(async event => {
 		.sort('createdAt', 'desc')
 		.getMany()
 
-	return userPosts
+	return await getPostList<typeof userPostsRaw>({
+		event,
+		posts: userPostsRaw,
+	})
 })

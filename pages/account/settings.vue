@@ -29,6 +29,8 @@
 	const handleSave = async () => {
 		const { data, error } = await useFetch('/api/currentUser', {
 			method: 'POST',
+			// @ts-expect-error - this is a valid option
+			headers: useRequestHeaders(['cookie']),
 			body: {
 				currentUser: {
 					id: currentUser.value?.id,

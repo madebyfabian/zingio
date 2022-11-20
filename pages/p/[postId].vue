@@ -1,14 +1,11 @@
 <template>
 	<div>
-		<Post
-			v-if="data?.post && data?.postLikes"
-			:post="data.post"
-			:postLikes="data.postLikes"
-			@like="refresh"
+		<PostList
+			v-if="data?.posts.length"
+			:posts="data.posts"
+			type="detail"
 			@requestRefresh="refresh"
 			@openCommentForm="() => (state.isCommentFormOpen = true)"
-			:postCommentsCount="data.postComments?.length"
-			type="detail"
 		/>
 
 		<section class="ml-6">
@@ -22,12 +19,11 @@
 				</section>
 			</div>
 
-			<div v-if="data?.postComments" class="mt-6">
-				<Post
-					v-for="postComment of data.postComments"
-					:key="postComment.id"
-					:post="postComment"
+			<div v-if="data?.postComments.length" class="mt-6">
+				<PostList
+					:posts="data.postComments"
 					type="feed"
+					@requestRefresh="refresh"
 				/>
 			</div>
 		</section>
@@ -47,6 +43,8 @@
 
 	// Fetch `userDetails`
 	const { data, refresh } = await useFetch('/api/postDetails', {
+		// @ts-expect-error - this is a valid option
+		headers: useRequestHeaders(['cookie']),
 		params: {
 			postId: route.params.postId,
 		},
@@ -70,7 +68,7 @@
 						},
 						content: postState.content,
 						isCommentOf: {
-							id: data.value?.post.id,
+							id: data.value?.posts[0].id,
 						},
 					},
 				},

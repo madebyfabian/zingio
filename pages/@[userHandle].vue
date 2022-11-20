@@ -10,18 +10,15 @@
 			</button>
 		</div>
 		<p class="mt-0 font-normal text-gray-500">@{{ userDetails?.handle }}</p>
+
 		<hr class="my-10" />
-		<div>
-			<div v-if="!pendingUserPosts">
-				<Post
-					v-for="post of userPosts"
-					:key="post.id"
-					:post="post"
-					type="feed"
-				/>
-			</div>
-			<LoadingIndicator v-else layout="fill" />
-		</div>
+
+		<PostList
+			v-if="userPosts?.length"
+			:posts="userPosts"
+			type="feed"
+			@requestRefresh="refreshUserPosts"
+		/>
 	</div>
 </template>
 
@@ -31,6 +28,8 @@
 
 	// Fetch `userDetails`
 	const { data: userDetails } = await useFetch('/api/userDetails', {
+		// @ts-expect-error - this is a valid option
+		headers: useRequestHeaders(['cookie']),
 		params: { userHandle: route.params.userHandle },
 	})
 	if (!userDetails.value)
@@ -47,15 +46,21 @@
 	})
 
 	// Fetch `userPosts`
-	const { data: userPosts, pending: pendingUserPosts } = useLazyFetch(
-		'/api/userPosts',
-		{ params: { userHandle: route.params.userHandle } }
-	)
+	const {
+		data: userPosts,
+		pending: pendingUserPosts,
+		refresh: refreshUserPosts,
+	} = useLazyFetch('/api/userPosts', {
+		// @ts-expect-error - this is a valid option
+		headers: useRequestHeaders(['cookie']),
+		params: { userHandle: route.params.userHandle },
+	})
 
 	const handleFollowToggle = async () => {
 		const userId = userDetails.value?.id
 		if (!userId) return
 
+		/** @todo: move this into the api call for userDetails */
 		const { data, error } = await useFetch('/api/currentUserIsFollowingUser', {
 			method: 'POST',
 			// @ts-expect-error - this is a valid option

@@ -1,5 +1,6 @@
 import { useServerAuthUser } from '@/server/composables/useServerAuthUser'
 import { xata } from '@/server/lib/xata'
+import { getPostList } from '@/server/utils/getPostList'
 
 const nonNullable = <T>(value: T): value is NonNullable<T> => {
 	return value !== null && value !== undefined
@@ -19,15 +20,22 @@ export default defineEventHandler(async event => {
 		.filter(nonNullable)
 	if (!usersFollowingIds.length) return []
 
-	return await xata.db.post
+	const postsRaw = await xata.db.post
 		.select(['*', 'authorUser.*'])
 		.filter({
-			authorUser: { id: { $any: usersFollowingIds } },
+			authorUser: {
+				id: { $any: usersFollowingIds },
+			},
 			isDeleted: false,
 			$notExists: 'isCommentOf',
 		})
 		.sort('createdAt', 'desc')
 		.getMany()
+
+	return await getPostList<typeof postsRaw>({
+		event,
+		posts: postsRaw,
+	})
 
 	/** 
 	 * @todo: future something like this:

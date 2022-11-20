@@ -2,16 +2,12 @@
 	<div>
 		<h1 class="mb-4">Welcome back, {{ currentUser?.name }}</h1>
 
-		<section v-if="!currentUserFeedPending">
-			<Post
-				v-for="post of currentUserFeed"
-				:key="post.id"
-				:post="post"
-				type="feed"
-			/>
-		</section>
-
-		<LoadingIndicator v-else layout="fill" />
+		<PostList
+			v-if="data?.length"
+			:posts="data"
+			type="feed"
+			@requestRefresh="refresh"
+		/>
 	</div>
 </template>
 
@@ -26,9 +22,8 @@
 	})
 
 	// Fetch `currentUserFeed`
-	const { data: currentUserFeed, pending: currentUserFeedPending } =
-		useLazyFetch('/api/currentUserFeed', {
-			// @ts-expect-error - this is a valid option
-			headers: useRequestHeaders(['cookie']),
-		})
+	const { data, pending, refresh } = useLazyFetch('/api/currentUserFeed', {
+		// @ts-expect-error - this is a valid option
+		headers: useRequestHeaders(['cookie']),
+	})
 </script>

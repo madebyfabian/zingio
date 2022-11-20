@@ -1,5 +1,6 @@
 import { z, useValidatedQuery } from 'h3-zod'
 import { xata } from '@/server/lib/xata'
+import { getPostList } from '@/server/utils/getPostList'
 
 export default defineEventHandler(async event => {
 	const query = useValidatedQuery(
@@ -9,20 +10,15 @@ export default defineEventHandler(async event => {
 		})
 	)
 
-	const [post, postLikes, postComments] = await Promise.all([
-		// post
+	// Get raw data.
+	const [postsRaw, postCommentsRaw] = await Promise.all([
+		// postRaw
 		xata.db.post
 			.select(['*', 'authorUser.*', 'isCommentOf.*'])
 			.filter({ id: query.postId })
-			.getFirstOrThrow(),
-
-		// postLikes
-		xata.db.postLikes
-			.select(['id', 'user.authId'])
-			.filter({ post: { id: query.postId } })
 			.getMany(),
 
-		// postComments
+		// postCommentsRaw
 		xata.db.post
 			.select(['*', 'authorUser.*'])
 			.filter({ isCommentOf: { id: query.postId } })
@@ -30,9 +26,22 @@ export default defineEventHandler(async event => {
 			.getMany(),
 	])
 
+	const [posts, postComments] = await Promise.all([
+		// post
+		getPostList<typeof postsRaw>({
+			event,
+			posts: postsRaw,
+		}),
+
+		// postComments
+		getPostList<typeof postCommentsRaw>({
+			event,
+			posts: postCommentsRaw,
+		}),
+	])
+
 	return {
-		post,
-		postLikes,
+		posts,
 		postComments,
 	}
 })

@@ -20,6 +20,18 @@ const tables = [
       { name: "updatedAt", type: "datetime" },
       { name: "isCommentOf", type: "link", link: { table: "post" } },
       { name: "isDeleted", type: "bool", notNull: true, defaultValue: "false" },
+      {
+        name: "countTotalComments",
+        type: "int",
+        notNull: true,
+        defaultValue: "0",
+      },
+      {
+        name: "countTotalLikes",
+        type: "int",
+        notNull: true,
+        defaultValue: "0",
+      },
     ],
   },
   {
@@ -48,7 +60,6 @@ const tables = [
       { name: "createdAt", type: "datetime" },
       { name: "updatedAt", type: "datetime" },
       { name: "user", type: "link", link: { table: "user" } },
-      { name: "_counter", type: "int", notNull: true, defaultValue: "1" },
     ],
   },
 ] as const;
