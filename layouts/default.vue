@@ -7,7 +7,7 @@
 			<div class="col-span-3">
 				<Sidebar />
 			</div>
-			<main class="col-span-9 py-6">
+			<main class="col-span-9 py-8">
 				<slot />
 			</main>
 		</div>

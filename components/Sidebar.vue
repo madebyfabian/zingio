@@ -1,5 +1,5 @@
 <template>
-	<div class="py-6 h-full border-r border-gray-200">
+	<div class="py-8 h-full border-r border-gray-200">
 		<ul class="flex flex-col gap-4">
 			<li>
 				<NuxtLink to="/">🏡 Home</NuxtLink>
