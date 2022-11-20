@@ -1,20 +1,10 @@
 <template>
-	<form @submit.prevent="handleSubmit">
-		<div class="flex justify-between items-center">
-			<h1>Create</h1>
-			<button>🪶 Post</button>
-		</div>
-
-		<textarea
-			v-model="postState.content"
-			rows="5"
-			class="w-96 border border-gray-200 rounded-lg mt-8 p-4"
-		></textarea>
-	</form>
+	<PostCreateForm @submit="handleSubmit" />
 </template>
 
 <script setup lang="ts">
 	import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
+	import { PostState } from '@/components/PostCreateForm.vue'
 	const router = useRouter()
 	const currentUserStore = useCurrentUserStore()
 	const currentUser = computed(() => currentUserStore.currentUser)
@@ -23,11 +13,7 @@
 		middleware: 'auth',
 	})
 
-	const postState = reactive({
-		content: '',
-	})
-
-	const handleSubmit = async () => {
+	const handleSubmit = async (postState: PostState) => {
 		const { data: newPost, error: newPostError } = await useFetch(
 			'/api/currentUserCreatePost',
 			{

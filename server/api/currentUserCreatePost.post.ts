@@ -12,6 +12,11 @@ export default defineEventHandler(async event => {
 					authId: z.string(),
 				}),
 				content: z.string(),
+				isCommentOf: z
+					.object({
+						id: z.string(),
+					})
+					.optional(),
 			}),
 		})
 	)
@@ -23,6 +28,7 @@ export default defineEventHandler(async event => {
 	const newRecord = await xata.db.post.create({
 		authorUser: body.post.authorUser.id,
 		content: body.post.content,
+		isCommentOf: body.post.isCommentOf?.id || null,
 		createdAt: new Date(),
 		updatedAt: new Date(),
 	})

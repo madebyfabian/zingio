@@ -43,10 +43,10 @@ const tables = [
   {
     name: "postLikes",
     columns: [
-      { name: "authorUser", type: "link", link: { table: "user" } },
       { name: "post", type: "link", link: { table: "post" } },
       { name: "createdAt", type: "datetime" },
       { name: "updatedAt", type: "datetime" },
+      { name: "user", type: "link", link: { table: "user" } },
     ],
   },
 ] as const;

@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="bg-gray-100 p-4 rounded-lg"
+		class="bg-gray-100 p-6 rounded-lg"
 		:class="{ 'flex-1': layout === 'fill' }"
 	>
 		Loading...

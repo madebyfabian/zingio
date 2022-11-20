@@ -17,20 +17,25 @@
 
 		<div
 			v-if="props.type === 'detail'"
-			class="flex gap-4 items-center mt-4 text-sm empty:hidden"
+			class="flex gap-3 items-center mt-4 text-sm empty:hidden"
 		>
 			<button
-				:data-type="isLikedByCurrUser ? 'secondary' : 'primary'"
 				@click="handlePostLike"
+				:data-type="isLikedByCurrUser ? 'secondary' : 'primary'"
+				class="gap-1"
 			>
-				Like
-				<span>{{ props.postLikes?.length }}</span>
+				👍 Like —
+				<span class="font-bold">{{ props.postLikes?.length }}</span>
 			</button>
 
-			<div v-if="props.postCommentsCount !== undefined">
-				Comment
+			<button
+				@click="() => emit('openCommentForm')"
+				data-type="secondary"
+				class="gap-1"
+			>
+				💬 Comment —
 				<span>{{ props.postCommentsCount }}</span>
-			</div>
+			</button>
 		</div>
 
 		<pre v-if="props.type === 'detail'" class="mt-4">{{ post }}</pre>
@@ -38,7 +43,10 @@
 </template>
 
 <script setup lang="ts">
+	import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
 	import type { Post, PostLikes } from '@/server/lib/xata/gen/client.gen'
+	const currentUserStore = useCurrentUserStore()
+	const currentUser = computed(() => currentUserStore.currentUser)
 	const router = useRouter()
 	const authUser = useAuthUser()
 
@@ -49,6 +57,11 @@
 		type: 'feed' | 'detail'
 	}>()
 
+	const emit = defineEmits<{
+		(e: 'like'): void
+		(e: 'openCommentForm'): void
+	}>()
+
 	const isLink = computed(() => {
 		return props.type === 'feed'
 	})
@@ -57,7 +70,7 @@
 		if (!props.postLikes?.length) return false
 
 		return !!props.postLikes.find(postLike => {
-			return postLike.authorUser?.authId === authUser.value?.id
+			return postLike.user?.authId === authUser.value?.id
 		})
 	})
 
@@ -67,7 +80,23 @@
 		}
 	}
 
-	const handlePostLike = () => {
-		// TBD.
+	const handlePostLike = async () => {
+		const { data, error } = await useFetch('/api/currentUserPostLike', {
+			method: 'POST',
+			// @ts-expect-error - this is a valid option
+			headers: useRequestHeaders(['cookie']),
+			body: {
+				postId: props.post.id,
+				user: {
+					id: currentUser.value?.id,
+					authId: authUser.value?.id,
+				},
+			},
+		})
+		if (error.value || !data.value) return console.error(error)
+
+		return emit('like')
 	}
+
+	const handlePostComment = () => {}
 </script>

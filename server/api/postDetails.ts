@@ -18,7 +18,7 @@ export default defineEventHandler(async event => {
 
 		// postLikes
 		xata.db.postLikes
-			.select(['id', 'authorUser.authId'])
+			.select(['id', 'user.authId'])
 			.filter({ post: { id: query.postId } })
 			.getMany(),
 

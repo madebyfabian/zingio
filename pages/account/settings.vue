@@ -7,7 +7,7 @@
 
 		<label class="mt-4 block">
 			<span>Name</span>
-			<input v-model="userState.name" />
+			<input v-model="currentUserInputState.name" />
 		</label>
 	</form>
 </template>
@@ -22,7 +22,7 @@
 		middleware: 'auth',
 	})
 
-	const userState = reactive({
+	const currentUserInputState = reactive({
 		name: currentUser.value.name,
 	})
 
@@ -30,10 +30,10 @@
 		const { data, error } = await useFetch('/api/currentUser', {
 			method: 'POST',
 			body: {
-				user: {
+				currentUser: {
 					id: currentUser.value?.id,
 					authId: currentUser.value?.authId,
-					name: userState.name,
+					name: currentUserInputState.name,
 				},
 			},
 		})
