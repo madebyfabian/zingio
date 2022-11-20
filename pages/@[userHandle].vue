@@ -60,7 +60,6 @@
 		const userId = userDetails.value?.id
 		if (!userId) return
 
-		/** @todo: move this into the api call for userDetails */
 		const { data, error } = await useFetch('/api/currentUserIsFollowingUser', {
 			method: 'POST',
 			// @ts-expect-error - this is a valid option

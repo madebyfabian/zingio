@@ -27,6 +27,7 @@ export default defineEventHandler(async event => {
 	if (!updatedRecord) return sendError(event, createError({ statusCode: 500 }))
 
 	/** @TODO delete likes */
+	/** @TODO set counter for countTotalComments and countTotalLikes -1 */
 
 	return updatedRecord
 })

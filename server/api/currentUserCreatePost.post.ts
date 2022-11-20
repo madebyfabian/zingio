@@ -25,14 +25,35 @@ export default defineEventHandler(async event => {
 	if (serverAuthUser.id !== body.post.authorUser.authId)
 		return sendError(event, createError({ statusCode: 403 }))
 
-	const newRecord = await xata.db.post.create({
+	const post = await xata.db.post
+		.select(['countTotalComments'])
+		.filter({ id: body.post.isCommentOf?.id })
+		.getFirst()
+
+	const preparedNewRecordRequest = xata.db.post.create({
 		authorUser: body.post.authorUser.id,
 		content: body.post.content,
 		isCommentOf: body.post.isCommentOf?.id || null,
 		createdAt: new Date(),
 		updatedAt: new Date(),
 	})
-	if (!newRecord) return sendError(event, createError({ statusCode: 500 }))
+
+	if (post?.id) {
+		const [newRecord, updatedIsCommentOf] = await Promise.all([
+			preparedNewRecordRequest,
+			xata.db.post.update({
+				id: post.id,
+				countTotalComments: post.countTotalComments + 1,
+			}),
+		])
+		if (!newRecord || !updatedIsCommentOf)
+			return sendError(event, createError({ statusCode: 500 }))
+		return newRecord
+	} else {
+		const newRecord = await preparedNewRecordRequest
+		if (!newRecord) return sendError(event, createError({ statusCode: 500 }))
+		return newRecord
+	}
 
 	/**
 		@todo: future something like this:
@@ -44,6 +65,4 @@ export default defineEventHandler(async event => {
 		})
 		if (!newLikesRecord) return sendError(event, createError({ statusCode: 500 }))
 		*/
-
-	return newRecord
 })
