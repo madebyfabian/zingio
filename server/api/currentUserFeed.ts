@@ -19,7 +19,7 @@ export default defineEventHandler(async event => {
 		.filter(nonNullable)
 	if (!usersFollowingIds.length) return []
 
-	const postsOLD = await xata.db.post
+	return await xata.db.post
 		.select(['*', 'authorUser.*'])
 		.filter({
 			authorUser: { id: { $any: usersFollowingIds } },
@@ -29,23 +29,23 @@ export default defineEventHandler(async event => {
 		.sort('createdAt', 'desc')
 		.getMany()
 
-	/** @TODO This does not work properly, only returns 1 object (should return multiple) */
-	const postsNew = await xata.db.postLikes.summarize({
-		columns: ['post.*', 'post.authorUser.*'],
-		summaries: {
-			likesTotal: { sum: '_counter' },
-		},
-		filter: {
-			post: {
-				authorUser: { id: { $any: usersFollowingIds } },
-				$notExists: 'isCommentOf',
-				isDeleted: false,
+	/** 
+	 * @todo: future something like this:
+		const res = await xata.db.postLikes.summarize({
+			columns: ['post.*', 'post.authorUser.*'],
+			summaries: {
+				likesTotal: { sum: '_counter' },
 			},
-		},
-	})
-
-	return {
-		posts: postsOLD,
-		postsNew,
-	}
+			filter: {
+				post: {
+					// @ts-expect-error works.
+					authorUser: { id: { $any: usersFollowingIds } },
+					$notExists: 'isCommentOf',
+					isDeleted: false,
+				},
+			},
+		})
+		
+		return res.summaries
+		*/
 })

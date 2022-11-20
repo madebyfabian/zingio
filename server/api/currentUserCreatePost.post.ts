@@ -34,5 +34,16 @@ export default defineEventHandler(async event => {
 	})
 	if (!newRecord) return sendError(event, createError({ statusCode: 500 }))
 
+	/**
+		@todo: future something like this:
+		const newLikesRecord = await xata.db.postLikes.create({
+			post: newRecord.id,
+			createdAt: new Date(),
+			updatedAt: new Date(),
+			_counter: 0,
+		})
+		if (!newLikesRecord) return sendError(event, createError({ statusCode: 500 }))
+		*/
+
 	return newRecord
 })

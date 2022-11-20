@@ -62,15 +62,19 @@
 
 <script setup lang="ts">
 	import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
-	import type { Post, PostLikes } from '@/server/lib/xata/gen/client.gen'
+	import type { SelectedPick } from '@xata.io/client'
+	import type {
+		PostRecord,
+		PostLikesRecord,
+	} from '@/server/lib/xata/gen/client.gen'
 	const currentUserStore = useCurrentUserStore()
 	const currentUser = computed(() => currentUserStore.currentUser)
 	const router = useRouter()
 	const authUser = useAuthUser()
 
 	const props = defineProps<{
-		post: Partial<Post>
-		postLikes?: Partial<PostLikes>[]
+		post: SelectedPick<PostRecord, ('*' | 'authorUser.*')[]>
+		postLikes?: Partial<PostLikesRecord>[]
 		postCommentsCount?: number
 		type: 'feed' | 'detail'
 	}>()
