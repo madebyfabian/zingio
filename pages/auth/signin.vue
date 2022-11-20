@@ -29,15 +29,12 @@
 		<div v-if="state.status !== null">
 			{{ state.status }}
 		</div>
-
-		<div v-if="state.status === 'success'">
-			<button class="mt-4" @click="$router.push('/')">Go to home</button>
-		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 	const supabase = useSupabaseClient()
+	const authUser = useAuthUser()
 
 	definePageMeta({
 		layout: 'auth',
@@ -47,6 +44,10 @@
 		email: '',
 		password: '',
 		status: null as null | 'error' | 'success',
+	})
+
+	watchEffect(() => {
+		if (state.status === 'success' && authUser.value) navigateTo('/')
 	})
 
 	const handleSubmit = async () => {
