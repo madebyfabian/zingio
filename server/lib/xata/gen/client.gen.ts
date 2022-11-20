@@ -48,6 +48,7 @@ const tables = [
       { name: "createdAt", type: "datetime" },
       { name: "updatedAt", type: "datetime" },
       { name: "user", type: "link", link: { table: "user" } },
+      { name: "_counter", type: "int", notNull: true, defaultValue: "1" },
     ],
   },
 ] as const;

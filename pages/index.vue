@@ -2,9 +2,11 @@
 	<div>
 		<h1 class="mb-4">Welcome back, {{ currentUser?.name }}</h1>
 
+		<pre>{{ currentUserFeed?.postsNew }}</pre>
+
 		<section v-if="!currentUserFeedPending">
 			<Post
-				v-for="post of currentUserFeed"
+				v-for="post of currentUserFeed?.posts"
 				:key="post.id"
 				:post="post"
 				type="feed"
