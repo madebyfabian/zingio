@@ -21,7 +21,7 @@
 				<div class="flex gap-3 items-center">
 					<button
 						@click="handlePostLike"
-						:data-type="isLikedByCurrUser ? 'secondary' : 'primary'"
+						:data-type="isLikedByCurrUser ? 'primary' : 'secondary'"
 						class="gap-1"
 					>
 						👍 Like —
