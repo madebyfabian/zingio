@@ -43,6 +43,8 @@
 		data: currentUserIsFollowingUser,
 		refresh: refreshCurrentUserIsFollowingUser,
 	} = useLazyFetch('/api/currentUserIsFollowingUser', {
+		// @ts-expect-error - this is a valid option
+		headers: useRequestHeaders(['cookie']),
 		params: { userId: userDetails.value.id },
 	})
 
@@ -58,11 +60,13 @@
 
 		const { data, error } = await useFetch('/api/currentUserIsFollowingUser', {
 			method: 'POST',
+			// @ts-expect-error - this is a valid option
+			headers: useRequestHeaders(['cookie']),
 			body: {
 				userId,
 			},
 		})
-		if (error || !data) return console.error(error)
+		if (error.value || !data.value) return console.error(error)
 
 		refreshCurrentUserIsFollowingUser()
 	}

@@ -2,8 +2,8 @@
 	<article
 		:tabindex="isLink ? 0 : undefined"
 		:role="isLink ? 'link' : undefined"
-		@click.capture="handleClick"
-		@keydown.capture.enter="handleClick"
+		@click.capture="handleElementClick"
+		@keydown.capture.enter="handleElementClick"
 		class="Post block py-4 bg-gray-100 rounded-xl p-6 my-6"
 		:class="{
 			'cursor-pointer': isLink,
@@ -15,13 +15,16 @@
 			{{ props.post.content }}
 		</p>
 
-		<div class="flex gap-4 items-center mt-4 text-sm empty:hidden">
+		<div
+			v-if="props.type === 'detail'"
+			class="flex gap-4 items-center mt-4 text-sm empty:hidden"
+		>
 			<button
-				v-if="props.postLikes?.length"
 				:data-type="isLikedByCurrUser ? 'secondary' : 'primary'"
+				@click="handlePostLike"
 			>
 				Like
-				<span>{{ props.postLikes.length }}</span>
+				<span>{{ props.postLikes?.length }}</span>
 			</button>
 
 			<div v-if="props.postCommentsCount !== undefined">
@@ -30,7 +33,7 @@
 			</div>
 		</div>
 
-		<pre class="mt-4">{{ post }}</pre>
+		<pre v-if="props.type === 'detail'" class="mt-4">{{ post }}</pre>
 	</article>
 </template>
 
@@ -58,9 +61,13 @@
 		})
 	})
 
-	const handleClick = () => {
+	const handleElementClick = () => {
 		if (isLink.value) {
 			router.push(`/p/${props.post.id}`)
 		}
+	}
+
+	const handlePostLike = () => {
+		// TBD.
 	}
 </script>

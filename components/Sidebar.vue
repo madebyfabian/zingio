@@ -37,7 +37,7 @@
 		<hr class="my-8" />
 
 		<div class="pr-6">
-			<button class="w-full" @click="$router.push('/create')">
+			<button class="w-full" @click="$router.push('/p/create')">
 				💬 Create something!
 			</button>
 		</div>
