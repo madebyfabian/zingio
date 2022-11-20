@@ -9,9 +9,11 @@
 		<hr class="my-8" />
 
 		<ul class="flex flex-col gap-4">
-			<template v-if="authUser">
+			<template v-if="currentUser">
 				<li>
-					<NuxtLink to="/todo"> 🙋 Hi, User </NuxtLink>
+					<NuxtLink :to="`/@${currentUser.handle}`">
+						🙋 Hi {{ currentUser.name }}!
+					</NuxtLink>
 				</li>
 				<li>
 					<NuxtLink :to="`/account/settings`"> ⚙️ Settings </NuxtLink>
@@ -43,7 +45,9 @@
 </template>
 
 <script setup lang="ts">
-	const authUser = useAuthUser()
+	import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
+	const currentUserStore = useCurrentUserStore()
+	const currentUser = computed(() => currentUserStore.currentUser)
 </script>
 
 <style scoped lang="postcss">

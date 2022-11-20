@@ -1,15 +1,12 @@
 <template>
 	<div>
-		<pre>{{ currentUserStore.currentUser }}</pre>
+		<h1>Hi!</h1>
+		<pre>{{ currentUser }}</pre>
 	</div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 	import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
-
 	const currentUserStore = useCurrentUserStore()
-
-	onMounted(() => {
-		currentUserStore.fetchCurrentUser()
-	})
+	const currentUser = computed(() => currentUserStore.currentUser)
 </script>
