@@ -30,17 +30,6 @@ export default defineEventHandler(async event => {
 			.getMany(),
 	])
 
-	// Aggregate.
-	const postLikesCount = await xata.db.postLikes.summarize({
-		columns: ['post.*'],
-		summaries: {
-			total_likes: { sum: '_counter' },
-		},
-		filter: { post: { id: query.postId } },
-	})
-
-	console.log(postLikesCount)
-
 	return {
 		post,
 		postLikes,
