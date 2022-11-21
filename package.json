@@ -6,6 +6,7 @@
 		"generate": "nuxt generate",
 		"preview": "nuxt preview",
 		"postinstall": "nuxt prepare",
+		"typecheck": "nuxt typecheck",
 		"generate-types:xata": "xata codegen"
 	},
 	"devDependencies": {
