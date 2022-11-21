@@ -1,7 +1,20 @@
 <template>
 	<div class="flex flex-col gap-4 justify-center min-h-[80vh] items-center">
 		<h1>Signup</h1>
-		<form @submit.prevent="handleSubmit" class="w-64 flex flex-col gap-2">
+
+		<p class="text-center">
+			Hey there! 👋 Signups are currently disabled.<br />If you want to join,
+			let me know by
+			<a
+				class="font-bold underline"
+				target="_blank"
+				rel="noopener noreferrer"
+				href="https://github.com/madebyfabian/twitter-clone/issues/new"
+				>opening an issue on GitHub</a
+			>.
+		</p>
+
+		<!--<form @submit.prevent="handleSubmit" class="w-64 flex flex-col gap-2">
 			<input
 				type="text"
 				v-model="state.email"
@@ -29,7 +42,7 @@
 		<div v-if="state.status !== null">
 			{{ state.status }}
 		</div>
-	</div>
+		--></div>
 </template>
 
 <script setup lang="ts">
