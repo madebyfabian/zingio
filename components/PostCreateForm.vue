@@ -1,26 +1,24 @@
 <template>
 	<form @submit.prevent="() => emit('submit', postState)">
-		<div class="flex justify-between items-center">
-			<h1>Create</h1>
-			<div class="flex gap-3 items-center">
-				<button
-					v-if="props.hasCancelOption"
-					@click="() => emit('cancel')"
-					type="button"
-					data-type="secondary"
-				>
-					Cancel
-				</button>
-
-				<button type="submit">🪶 Post</button>
-			</div>
-		</div>
-
 		<textarea
 			v-model="postState.content"
+			placeholder="What's on your mind?"
 			rows="5"
-			class="mt-4 w-full"
+			class="w-full"
 		></textarea>
+
+		<div class="flex gap-3 mt-4 items-center justify-end">
+			<button
+				v-if="props.hasCancelOption"
+				@click="() => emit('cancel')"
+				type="button"
+				data-type="secondary"
+			>
+				Cancel
+			</button>
+
+			<button type="submit">🪶 Post</button>
+		</div>
 	</form>
 </template>
 

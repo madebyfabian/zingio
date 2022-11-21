@@ -15,7 +15,7 @@
 
 		<hr class="my-8" />
 
-		<h3 v-if="currentUser" class="mb-2">Hi, {{ currentUser.name }}👋</h3>
+		<h3 v-if="currentUser" class="mb-2">Hi, {{ currentUser.name }} 👋</h3>
 
 		<ul class="flex flex-col">
 			<template v-if="currentUser">
@@ -35,9 +35,7 @@
 		<hr class="my-8" />
 
 		<div class="pr-6">
-			<button class="w-full" @click="$router.push('/p/create')">
-				💬 Create something!
-			</button>
+			<PostCreateDialog />
 		</div>
 	</div>
 </template>

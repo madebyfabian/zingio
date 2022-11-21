@@ -54,7 +54,7 @@
 						data-type="secondary"
 						class="gap-1"
 					>
-						🗑️ Löschen
+						🗑️ Delete
 					</button>
 				</div>
 			</nav>

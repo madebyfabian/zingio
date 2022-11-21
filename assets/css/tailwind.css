@@ -12,6 +12,10 @@
 		@apply min-h-screen;
 	}
 
+	* {
+		@apply outline-emerald-500 accent-emerald-500;
+	}
+
 	body {
 		@apply overflow-x-hidden overflow-y-scroll;
 	}

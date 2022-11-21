@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<h1 class="mb-4">Welcome back, {{ currentUser?.name }}</h1>
+		<h1 class="mb-4">Hi, {{ currentUser?.name }} 👋</h1>
 
 		<PostList
 			v-if="data?.length"

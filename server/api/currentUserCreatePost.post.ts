@@ -25,10 +25,12 @@ export default defineEventHandler(async event => {
 	if (serverAuthUser.id !== body.post.authorUser.authId)
 		return sendError(event, createError({ statusCode: 403 }))
 
-	const post = await xata.db.post
-		.select(['countTotalComments'])
-		.filter({ id: body.post.isCommentOf?.id })
-		.getFirst()
+	const isCommentOfPost = body.post.isCommentOf?.id
+		? await xata.db.post
+				.select(['countTotalComments'])
+				.filter({ id: body.post.isCommentOf.id })
+				.getFirst()
+		: undefined
 
 	const preparedNewRecordRequest = xata.db.post.create({
 		authorUser: body.post.authorUser.id,
@@ -38,12 +40,12 @@ export default defineEventHandler(async event => {
 		updatedAt: new Date(),
 	})
 
-	if (post?.id) {
+	if (isCommentOfPost?.id) {
 		const [newRecord, updatedIsCommentOf] = await Promise.all([
 			preparedNewRecordRequest,
 			xata.db.post.update({
-				id: post.id,
-				countTotalComments: post.countTotalComments + 1,
+				id: isCommentOfPost.id,
+				countTotalComments: isCommentOfPost.countTotalComments + 1,
 			}),
 		])
 		if (!newRecord || !updatedIsCommentOf)
