@@ -13,7 +13,7 @@
 	}
 
 	* {
-		@apply outline-emerald-500 accent-emerald-500;
+		@apply outline-emerald-500 accent-emerald-500 text-gray-700;
 	}
 
 	body {
