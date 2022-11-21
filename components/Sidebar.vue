@@ -1,7 +1,7 @@
 <template>
 	<div class="py-8 h-full border-r border-gray-200">
 		<NuxtLink
-			class="font-black text-3xl tracking-tight text-gray-600 inline-block"
+			class="font-black text-3xl tracking-tight text-gray-700 inline-block"
 			to="/"
 		>
 			<span class="text-2xl">💬</span> timmo<span class="opacity-50">.</span>
@@ -11,6 +11,9 @@
 
 		<ul class="flex flex-col">
 			<SidebarItem to="/" icon="🏡">Home</SidebarItem>
+			<SidebarItem to="/account/bookmarks/folders" icon="🔖"
+				>Bookmarks</SidebarItem
+			>
 		</ul>
 
 		<hr class="my-8" />

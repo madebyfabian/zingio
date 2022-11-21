@@ -45,6 +45,23 @@
 						💬 Comment —
 						<span>{{ postState.countTotalComments }}</span>
 					</button>
+
+					<button
+						data-type="secondary"
+						@click.stop="state.postBookmarkDialogOpen = true"
+					>
+						🔖 Bookmark
+					</button>
+					<UIDialog
+						:isOpen="state.postBookmarkDialogOpen"
+						@close="state.postBookmarkDialogOpen = false"
+					>
+						<PostBookmarkDialogForm
+							v-if="state.postBookmarkDialogOpen"
+							:postId="postState.id"
+							@afterSubmit="handleAfterPostBookmarkSubmit"
+						/>
+					</UIDialog>
 				</div>
 
 				<div class="flex gap-3 items-center">
@@ -93,6 +110,10 @@
 		(e: 'requestRefresh'): void
 		(e: 'openCommentForm'): void
 	}>()
+
+	const state = reactive({
+		postBookmarkDialogOpen: false,
+	})
 
 	const postState = useState<typeof _props.post>(
 		`postState:${_props.post.id}`,
@@ -158,5 +179,10 @@
 		if (error.value || !data.value) return console.error(error)
 
 		return emit('requestRefresh')
+	}
+
+	const handleAfterPostBookmarkSubmit = () => {
+		state.postBookmarkDialogOpen = false
+		emit('requestRefresh')
 	}
 </script>

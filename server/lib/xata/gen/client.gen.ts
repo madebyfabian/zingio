@@ -62,6 +62,35 @@ const tables = [
       { name: "user", type: "link", link: { table: "user" } },
     ],
   },
+  {
+    name: "bookmarkFolder",
+    columns: [
+      {
+        name: "name",
+        type: "string",
+        notNull: true,
+        defaultValue: "My Bookmarks",
+      },
+      { name: "user", type: "link", link: { table: "user" } },
+      { name: "createdAt", type: "datetime" },
+      { name: "updatedAt", type: "datetime" },
+      { name: "icon", type: "string", notNull: true, defaultValue: "📚" },
+    ],
+  },
+  {
+    name: "postBookmark",
+    columns: [
+      { name: "post", type: "link", link: { table: "post" } },
+      { name: "user", type: "link", link: { table: "user" } },
+      {
+        name: "bookmarkFolder",
+        type: "link",
+        link: { table: "bookmarkFolder" },
+      },
+      { name: "createdAt", type: "datetime" },
+      { name: "updatedAt", type: "datetime" },
+    ],
+  },
 ] as const;
 
 export type SchemaTables = typeof tables;
@@ -79,11 +108,19 @@ export type UserFollowingRecord = UserFollowing & XataRecord;
 export type PostLikes = InferredTypes["postLikes"];
 export type PostLikesRecord = PostLikes & XataRecord;
 
+export type BookmarkFolder = InferredTypes["bookmarkFolder"];
+export type BookmarkFolderRecord = BookmarkFolder & XataRecord;
+
+export type PostBookmark = InferredTypes["postBookmark"];
+export type PostBookmarkRecord = PostBookmark & XataRecord;
+
 export type DatabaseSchema = {
   post: PostRecord;
   user: UserRecord;
   userFollowing: UserFollowingRecord;
   postLikes: PostLikesRecord;
+  bookmarkFolder: BookmarkFolderRecord;
+  postBookmark: PostBookmarkRecord;
 };
 
 const DatabaseClient = buildClient();

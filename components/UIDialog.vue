@@ -1,7 +1,13 @@
 <template>
-	<dialog ref="dialogEl" @close="handleClose">
+	<dialog
+		ref="dialogEl"
+		@close.stop="handleClose"
+		@click.stop="() => {}"
+		@keydown.enter="() => {}"
+		class="cursor-default"
+	>
 		<div class="absolute right-4 top-5">
-			<button @click="handleClose" type="button" data-type="secondary">
+			<button @click.stop="handleClose" type="button" data-type="secondary">
 				X
 			</button>
 		</div>

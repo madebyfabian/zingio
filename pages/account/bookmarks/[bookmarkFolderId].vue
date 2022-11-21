@@ -1,0 +1,40 @@
+<template>
+	<div>
+		<div class="mb-8 flex gap-4">
+			<button
+				@click="navigateTo('/account/bookmarks/folders')"
+				data-type="secondary"
+			>
+				&larr; Back
+			</button>
+			<h1>
+				{{ postBookmarkList?.bookmarkFolder?.icon }}
+				{{ postBookmarkList?.bookmarkFolder?.name }}
+			</h1>
+		</div>
+
+		<PostList
+			v-if="postBookmarkList?.posts"
+			:posts="postBookmarkList.posts"
+			type="feed"
+			@requestRefresh="postBookmarkListRefresh"
+		/>
+	</div>
+</template>
+
+<script setup lang="ts">
+	const route = useRoute()
+
+	definePageMeta({
+		middleware: 'auth',
+	})
+
+	const { data: postBookmarkList, refresh: postBookmarkListRefresh } =
+		await useFetch('/api/postBookmarkList', {
+			// @ts-expect-error - this is a valid option
+			headers: useRequestHeaders(['cookie']),
+			params: { bookmarkFolderId: route.params.bookmarkFolderId },
+		})
+	if (!postBookmarkList.value)
+		throw createError({ statusCode: 404, message: 'Data not found' })
+</script>
