@@ -42,10 +42,16 @@
 
 		&:not([data-type='secondary']) {
 			@apply bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-md text-white;
+			& * {
+				@apply text-white;
+			}
 		}
 
 		&[data-type='secondary'] {
 			@apply bg-white border border-gray-200 text-gray-700 shadow-sm;
+			& * {
+				@apply text-gray-700;
+			}
 		}
 	}
 
