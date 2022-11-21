@@ -26,8 +26,8 @@
 				{{ postState.content }}
 			</p>
 
-			<nav class="flex justify-between mt-4">
-				<div class="flex gap-3 items-center">
+			<nav class="flex flex-wrap justify-between mt-4">
+				<div class="flex gap-3 items-center flex-wrap">
 					<button
 						@click.stop="handlePostLike"
 						:data-type="isLikedByCurrUser ? 'primary' : 'secondary'"
