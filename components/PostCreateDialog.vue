@@ -22,10 +22,6 @@
 	const currentUserStore = useCurrentUserStore()
 	const currentUser = computed(() => currentUserStore.currentUser)
 
-	definePageMeta({
-		middleware: 'auth',
-	})
-
 	const state = reactive({
 		dialogOpen: false,
 	})
