@@ -1,5 +1,5 @@
 <template>
-	<div class="py-8 h-full" :class="{ 'border-r': !props.asMenu }">
+	<div class="py-8 h-full max-h-screen" :class="{ 'border-r': !props.asMenu }">
 		<NuxtLink
 			v-if="!props.asMenu"
 			class="font-black text-3xl tracking-tight text-gray-700 inline-block"
@@ -41,6 +41,43 @@
 
 		<div class="pr-6">
 			<PostCreateDialog />
+		</div>
+
+		<div class="mt-8 text-xs flex">
+			<a
+				href="https://github.com/madebyfabian/twitter-clone"
+				target="_blank"
+				rel="noopener noreferrer"
+			>
+				GitHub</a
+			>
+
+			<span class="mx-1 text-gray-500">·</span>
+
+			<a
+				href="https://twitter.com/madebyfabian"
+				target="_blank"
+				rel="noopener noreferrer"
+				>By @madebyfabian
+			</a>
+		</div>
+
+		<div class="mt-1 mb-8 text-xs flex">
+			<a
+				href="https://madebyfabian.com/impressum/"
+				target="_blank"
+				rel="noopener noreferrer"
+				>Legal Notice
+			</a>
+
+			<span class="mx-1 text-gray-500">·</span>
+
+			<a
+				href="https://madebyfabian.com/datenschutz/"
+				target="_blank"
+				rel="noopener noreferrer"
+				>Privacy
+			</a>
 		</div>
 	</div>
 </template>
