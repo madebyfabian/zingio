@@ -1,13 +1,10 @@
 <template>
-	<article
+	<Card
 		:tabindex="!state.editMode ? 0 : undefined"
 		:role="!state.editMode ? 'link' : undefined"
 		@click="handleElementClick"
 		@keydown.enter="handleElementClick"
-		class="block border border-gray-200 rounded-xl p-4"
-		:class="{
-			'cursor-pointer hover:shadow-md transition-shadow': !state.editMode,
-		}"
+		:isInteractive="!state.editMode"
 	>
 		<form @submit.prevent="handleSubmit">
 			<div class="flex justify-between">
@@ -60,7 +57,7 @@
 				/>
 			</div>
 		</form>
-	</article>
+	</Card>
 </template>
 
 <script lang="ts">

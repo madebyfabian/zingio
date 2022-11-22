@@ -1,8 +1,5 @@
 <template>
-	<div
-		class="py-8 h-full"
-		:class="{ 'border-r border-gray-200': !props.asMenu }"
-	>
+	<div class="py-8 h-full" :class="{ 'border-r': !props.asMenu }">
 		<NuxtLink
 			v-if="!props.asMenu"
 			class="font-black text-3xl tracking-tight text-gray-700 inline-block"

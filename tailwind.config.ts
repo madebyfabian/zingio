@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss'
+import colors from 'tailwindcss/colors'
 
 export default <Partial<Config>>{
 	theme: {
@@ -10,6 +11,11 @@ export default <Partial<Config>>{
 			sm: '640px',
 			md: '768px',
 			lg: '1024px',
+		},
+		extend: {
+			borderColor: {
+				DEFAULT: colors?.gray[200],
+			},
 		},
 	},
 }

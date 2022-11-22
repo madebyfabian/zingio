@@ -1,13 +1,14 @@
 <template>
-	<article
+	<Card
 		:tabindex="isLink ? 0 : undefined"
 		:role="isLink ? 'link' : undefined"
 		@click="handleElementClick"
 		@keydown.enter="handleElementClick"
-		class="Post block bg-white border border-gray-200 rounded-xl p-6 mb-6"
+		class="Post mb-6"
+		:isInteractive="isLink"
 		:class="{
 			'cursor-pointer': isLink,
-			'shadow-lg': !isLink,
+			'!shadow-lg': !isLink,
 		}"
 	>
 		<template v-if="!isDeleted">
@@ -78,7 +79,7 @@
 		</template>
 
 		<div v-else class="italic">This post has been deleted.</div>
-	</article>
+	</Card>
 </template>
 
 <script lang="ts">
