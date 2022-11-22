@@ -12,12 +12,6 @@ const tables = [
     columns: [
       { name: "content", type: "text" },
       { name: "authorUser", type: "link", link: { table: "user" } },
-      {
-        name: "createdAt",
-        type: "datetime",
-        defaultValue: "2022-11-18T19:35:37.105Z",
-      },
-      { name: "updatedAt", type: "datetime" },
       { name: "isCommentOf", type: "link", link: { table: "post" } },
       { name: "isDeleted", type: "bool", notNull: true, defaultValue: "false" },
       {
@@ -32,6 +26,8 @@ const tables = [
         notNull: true,
         defaultValue: "0",
       },
+      { name: "createdAt", type: "datetime" },
+      { name: "updatedAt", type: "datetime" },
     ],
   },
   {
