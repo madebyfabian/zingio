@@ -15,6 +15,7 @@
 			<SidebarItem to="/account/bookmarks/folders" icon="🔖"
 				>Bookmarks</SidebarItem
 			>
+			<SidebarItem to="/discover/users" icon="🕵️">Discover People</SidebarItem>
 		</ul>
 
 		<hr class="my-8" />
