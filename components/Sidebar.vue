@@ -1,5 +1,8 @@
 <template>
-	<div class="py-8 h-full max-h-screen" :class="{ 'border-r': !props.asMenu }">
+	<div
+		class="Sidebar py-8 h-full max-h-screen lg:w-[inherit]"
+		:class="{ 'border-r fixed': !props.asMenu }"
+	>
 		<NuxtLink
 			v-if="!props.asMenu"
 			class="font-black text-3xl tracking-tight text-gray-700 inline-block"

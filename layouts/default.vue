@@ -2,13 +2,13 @@
 	<div>
 		<div
 			v-if="!currentUserPending"
-			class="container min-h-screen lg:grid lg:grid-cols-12 lg:gap-x-8"
+			class="container min-h-screen lg:flex lg:gap-x-8"
 		>
-			<div class="hidden lg:block lg:col-span-3">
+			<div class="hidden lg:block relative w-56 shrink-0">
 				<Sidebar />
 			</div>
 
-			<div class="block lg:hidden h-20 lg:col-span-3">
+			<div class="block lg:hidden h-20">
 				<div class="flex justify-between items-center h-full">
 					<NuxtLink
 						class="font-black text-3xl tracking-tight text-gray-700 inline-block"
@@ -29,7 +29,7 @@
 				</div>
 			</div>
 
-			<main class="lg:col-span-9 py-8">
+			<main class="lg:col-span-9 py-8 lg:flex-1">
 				<slot />
 			</main>
 		</div>
