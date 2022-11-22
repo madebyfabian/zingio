@@ -23,6 +23,7 @@ export default defineEventHandler(async event => {
 	const updatedRecord = await xata.db.post.update({
 		id: body.post.id,
 		isDeleted: true,
+		updatedAt: new Date(),
 	})
 	if (!updatedRecord) return sendError(event, createError({ statusCode: 500 }))
 

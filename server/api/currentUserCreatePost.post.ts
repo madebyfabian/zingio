@@ -46,6 +46,7 @@ export default defineEventHandler(async event => {
 			xata.db.post.update({
 				id: isCommentOfPost.id,
 				countTotalComments: isCommentOfPost.countTotalComments + 1,
+				updatedAt: new Date(),
 			}),
 		])
 		if (!newRecord || !updatedIsCommentOf)

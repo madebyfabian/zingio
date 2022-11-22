@@ -37,6 +37,7 @@ export default defineEventHandler(async event => {
 	// Prepare the transaction that will increment/decrement the post's total likes count.
 	const preparedUpdateCounterTransaction = xata.db.post.update({
 		id: body.postId,
+		updatedAt: new Date(),
 		countTotalLikes:
 			typeof post?.countTotalLikes === 'number'
 				? existingLike

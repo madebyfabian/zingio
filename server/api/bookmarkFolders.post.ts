@@ -27,8 +27,8 @@ export default defineEventHandler(async event => {
 		user: body.bookmarkFolder.user.id,
 		name: body.bookmarkFolder.name,
 		icon: body.bookmarkFolder.icon,
-		createdAt: new Date(),
-		updatedAt: body.bookmarkFolder.id ? new Date() : undefined,
+		createdAt: body.bookmarkFolder.id ? undefined : new Date(),
+		updatedAt: new Date(),
 	})
 	if (!newRecord) return sendError(event, createError({ statusCode: 500 }))
 
