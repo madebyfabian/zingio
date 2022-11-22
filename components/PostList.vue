@@ -24,7 +24,7 @@
 		defineProps<{
 			posts: PostProps['post'][] | null
 			type: PostProps['type']
-			variant: 'default' | 'bookmarks'
+			variant?: 'default' | 'bookmarks'
 			stateKey: string
 		}>(),
 		{
