@@ -1,6 +1,7 @@
 import { z, useValidatedBody } from 'h3-zod'
 import { xata } from '@/server/lib/xata'
 import { serverSupabaseClient } from '#supabase/server'
+import { useRuntimeConfig } from '#app'
 
 export default defineEventHandler(async event => {
 	const supabase = serverSupabaseClient(event)
@@ -15,15 +16,20 @@ export default defineEventHandler(async event => {
 		})
 	)
 
+	const redirectUrl =
+		import.meta.env.NUXT_ENV_VERCEL_ENV === 'production'
+			? 'https://twitter-clone-omega-wheat.vercel.app'
+			: 'http://localhost:3000'
+
+	const runtimeConfig = useRuntimeConfig()
+	console.log({ redirectUrl, runtimeConfig })
+
 	// First create the supabase auth user.
 	const { data: authRes, error: authError } = await supabase.auth.signUp({
 		email: body.user.email,
 		password: body.user.password,
 		options: {
-			emailRedirectTo:
-				import.meta.env.NUXT_ENV_VERCEL_ENV === 'production'
-					? 'https://twitter-clone-omega-wheat.vercel.app'
-					: 'http://localhost:3000',
+			emailRedirectTo: redirectUrl,
 		},
 	})
 	const authId = authRes.user?.id
