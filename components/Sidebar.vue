@@ -15,9 +15,7 @@
 
 		<ul class="flex flex-col">
 			<SidebarItem to="/" icon="🏡">Home</SidebarItem>
-			<SidebarItem to="/account/bookmarks/folders" icon="🔖"
-				>Bookmarks</SidebarItem
-			>
+
 			<SidebarItem to="/discover/users" icon="🕵️">Discover People</SidebarItem>
 		</ul>
 
@@ -27,6 +25,9 @@
 
 		<ul class="flex flex-col">
 			<template v-if="currentUser">
+				<SidebarItem to="/account/bookmarks/folders" icon="🔖"
+					>Bookmarks</SidebarItem
+				>
 				<SidebarItem :to="`/@${currentUser.handle}`" icon="🙋"
 					>My Profile
 				</SidebarItem>
