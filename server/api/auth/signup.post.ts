@@ -21,7 +21,7 @@ export default defineEventHandler(async event => {
 		password: body.user.password,
 		options: {
 			emailRedirectTo:
-				import.meta.env.VERCEL_ENV === 'production'
+				import.meta.env.NUXT_ENV_VERCEL_ENV === 'production'
 					? 'https://twitter-clone-omega-wheat.vercel.app'
 					: 'http://localhost:3000',
 		},
