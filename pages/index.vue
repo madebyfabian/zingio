@@ -6,7 +6,7 @@
 			v-if="data?.length"
 			:posts="data"
 			type="feed"
-			@requestRefresh="refresh"
+			stateKey="homepagePostList"
 		/>
 	</div>
 </template>
@@ -22,7 +22,7 @@
 	})
 
 	// Fetch `currentUserFeed`
-	const { data, pending, refresh } = useLazyFetch('/api/currentUserFeed', {
+	const { data } = useLazyFetch('/api/currentUserFeed', {
 		// @ts-expect-error - this is a valid option
 		headers: useRequestHeaders(['cookie']),
 	})

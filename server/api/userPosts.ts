@@ -7,10 +7,11 @@ export default defineEventHandler(async event => {
 		event,
 		z.object({
 			userHandle: z.string(),
+			paginationCursor: z.string().optional(),
 		})
 	)
 
-	const userPostsRaw = await xata.db.post
+	const userPostsPaginatedRaw = await xata.db.post
 		.select(['*', 'authorUser.*'])
 		.filter({
 			authorUser: { handle: query.userHandle },
@@ -18,10 +19,18 @@ export default defineEventHandler(async event => {
 			$notExists: 'isCommentOf',
 		})
 		.sort('createdAt', 'desc')
-		.getMany()
+		.getPaginated({
+			pagination: {
+				size: 5,
+				after: query.paginationCursor ?? undefined,
+			},
+		})
 
-	return await getPostList<typeof userPostsRaw>({
-		event,
-		posts: userPostsRaw,
-	})
+	return {
+		...userPostsPaginatedRaw,
+		records: await getPostList<typeof userPostsPaginatedRaw.records>({
+			event,
+			posts: userPostsPaginatedRaw.records,
+		}),
+	}
 })

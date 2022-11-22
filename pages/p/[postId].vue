@@ -4,8 +4,8 @@
 			v-if="data?.posts.length"
 			:posts="data.posts"
 			type="detail"
-			@requestRefresh="refresh"
 			@openCommentForm="() => (state.isCommentFormOpen = true)"
+			stateKey="postDetailEntryPostList"
 		/>
 
 		<section class="ml-6">
@@ -23,7 +23,7 @@
 				<PostList
 					:posts="data.postComments"
 					type="feed"
-					@requestRefresh="refresh"
+					stateKey="postDetailEntryCommentsPostList"
 				/>
 			</div>
 		</section>

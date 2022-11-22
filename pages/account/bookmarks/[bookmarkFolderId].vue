@@ -17,7 +17,8 @@
 			v-if="postBookmarkList?.posts"
 			:posts="postBookmarkList.posts"
 			type="feed"
-			@requestRefresh="postBookmarkListRefresh"
+			variant="bookmarks"
+			stateKey="accountBookmarksFolderPagePostList"
 		/>
 	</div>
 </template>

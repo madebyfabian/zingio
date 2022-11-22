@@ -28,7 +28,7 @@ export default defineEventHandler(async event => {
 	if (serverAuthUser.id !== body.postBookmark.user.authId)
 		return sendError(event, createError({ statusCode: 403 }))
 
-	const newRecord = await xata.db.postBookmark.createOrUpdate({
+	const record = await xata.db.postBookmark.createOrUpdate({
 		id: body.postBookmark.id ?? '',
 		user: body.postBookmark.user.id,
 		post: body.postBookmark.post.id,
@@ -36,6 +36,6 @@ export default defineEventHandler(async event => {
 		updatedAt: new Date(),
 		createdAt: body.postBookmark.id ? undefined : new Date(),
 	})
-	if (!newRecord) return sendError(event, createError({ statusCode: 500 }))
-	return newRecord
+	if (!record) return sendError(event, createError({ statusCode: 500 }))
+	return record
 })

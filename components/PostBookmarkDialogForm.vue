@@ -42,6 +42,10 @@
 	</div>
 </template>
 
+<script lang="ts">
+	export type EmitReturnAction = 'created' | 'deleted' | 'updated' | null
+</script>
+
 <script setup lang="ts">
 	import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
 	const currentUserStore = useCurrentUserStore()
@@ -53,8 +57,7 @@
 	}>()
 
 	const emit = defineEmits<{
-		(e: 'beforeSubmit'): void
-		(e: 'afterSubmit'): void
+		(e: 'afterSubmit', returnAction: EmitReturnAction): void
 	}>()
 
 	const isBookmarkedInUnsortedFolder = computed(() => {
@@ -96,14 +99,14 @@
 		bookmarkFolderId?: string
 		toUnsorted?: boolean
 	}) => {
-		emit('beforeSubmit')
+		let returnAction: EmitReturnAction = null
 
-		const shouldDelete =
+		const willDelete =
 			(toUnsorted && isBookmarkedInUnsortedFolder.value) ||
 			(bookmarkFolderId && isBookmarkedInFolder({ bookmarkFolderId }))
 
 		// If user clicks same folder, then we want to delete it
-		if (shouldDelete) {
+		if (willDelete) {
 			const { data, error } = await useFetch('/api/postBookmarkDelete', {
 				method: 'POST',
 				// @ts-expect-error - this is a valid option
@@ -120,6 +123,8 @@
 			})
 			if (!data.value || error.value) {
 				console.error(error.value)
+			} else {
+				returnAction = 'deleted'
 			}
 		} else {
 			const { data, error } = await useFetch('/api/postBookmark', {
@@ -146,9 +151,11 @@
 			})
 			if (!data.value || error.value) {
 				console.error(error.value)
+			} else {
+				returnAction = postBookmark.value?.id ? 'updated' : 'created'
 			}
 		}
 
-		emit('afterSubmit')
+		emit('afterSubmit', returnAction)
 	}
 </script>

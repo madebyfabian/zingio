@@ -12,8 +12,12 @@
 			v-if="userPosts?.length"
 			:posts="userPosts"
 			type="feed"
-			@requestRefresh="refreshUserPosts"
+			stateKey="userDetailPagePostList"
 		/>
+
+		<button v-if="userPostsMeta?.page?.more" @click="loadUserPosts">
+			Load more
+		</button>
 	</div>
 </template>
 
@@ -21,24 +25,44 @@
 	const route = useRoute()
 
 	// Fetch `userDetails`
-	const { data: userDetails, refresh: refreshUserDetails } = await useFetch(
-		'/api/userDetails',
-		{
-			// @ts-expect-error - this is a valid option
-			headers: useRequestHeaders(['cookie']),
-			params: { userHandle: route.params.userHandle },
-		}
-	)
+	const { data: userDetails } = await useFetch('/api/userDetails', {
+		// @ts-expect-error - this is a valid option
+		headers: useRequestHeaders(['cookie']),
+		params: { userHandle: route.params.userHandle },
+	})
 	if (!userDetails.value)
 		throw createError({ statusCode: 404, message: 'User not found' })
 
+	const userPosts = useState(`userPosts:${userDetails.value.id}`, () => [])
+	const userPostsMeta = useState<{
+		page?: { more: boolean; cursor: string }
+	}>(`userPosts:${userDetails.value.id}:meta`, () => ({
+		page: undefined,
+	}))
+
+	onMounted(() => {
+		loadUserPosts()
+	})
+
 	// Fetch `userPosts`
-	const { data: userPosts, refresh: refreshUserPosts } = useLazyFetch(
-		'/api/userPosts',
-		{
-			// @ts-expect-error - this is a valid option
-			headers: useRequestHeaders(['cookie']),
-			params: { userHandle: route.params.userHandle },
+	const loadUserPosts = async () => {
+		const paginationCursor = userPostsMeta.value.page?.cursor
+
+		try {
+			const res = await $fetch('/api/userPosts', {
+				// @ts-expect-error - this is a valid option
+				headers: useRequestHeaders(['cookie']),
+				params: {
+					userHandle: route.params.userHandle,
+					paginationCursor: paginationCursor ?? undefined,
+				},
+			})
+			if (!res) throw createError({ statusCode: 500 })
+
+			userPosts.value = [...userPosts.value, ...(res.records as never[])]
+			userPostsMeta.value = res.meta
+		} catch (error) {
+			console.error(error)
 		}
-	)
+	}
 </script>

@@ -13,8 +13,9 @@
 		<PostList
 			v-if="postBookmarkList?.posts"
 			:posts="postBookmarkList.posts"
-			@requestRefresh="refreshPostBookmarkList"
 			type="feed"
+			variant="bookmarks"
+			stateKey="accountBookmarksUnsortedPagePostList"
 		/>
 	</div>
 </template>

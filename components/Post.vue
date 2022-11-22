@@ -93,7 +93,8 @@
 	import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
 	import type { SelectedPick } from '@xata.io/client'
 	import type { PostRecord } from '@/server/lib/xata/gen/client.gen'
-	import { PostExtension } from '@/types'
+	import type { PostExtension } from '@/types'
+	import type { EmitReturnAction } from '@/components/PostBookmarkDialogForm.vue'
 	const currentUserStore = useCurrentUserStore()
 	const currentUser = computed(() => currentUserStore.currentUser)
 	const router = useRouter()
@@ -105,7 +106,12 @@
 	}>()
 
 	const emit = defineEmits<{
-		(e: 'requestRefresh'): void
+		(e: 'postDeleted', postId: string): void
+		(
+			e: 'postBookmarkChanged',
+			postId: string,
+			returnAction: EmitReturnAction
+		): void
 		(e: 'openCommentForm'): void
 	}>()
 
@@ -176,11 +182,11 @@
 		})
 		if (error.value || !data.value) return console.error(error)
 
-		return emit('requestRefresh')
+		return emit('postDeleted', postState.value.id)
 	}
 
-	const handleAfterPostBookmarkSubmit = () => {
+	const handleAfterPostBookmarkSubmit = (returnAction: EmitReturnAction) => {
 		state.postBookmarkDialogOpen = false
-		emit('requestRefresh')
+		emit('postBookmarkChanged', postState.value.id, returnAction)
 	}
 </script>
