@@ -37,13 +37,11 @@
 		middleware: 'auth',
 	})
 
-	const { data: bookmarkFolders, refresh: refreshBookmarkFolders } = useFetch(
-		'/api/bookmarkFolders',
-		{
+	const { data: bookmarkFolders, refresh: refreshBookmarkFolders } =
+		await useFetch('/api/bookmarkFolders', {
 			// @ts-expect-error - this is a valid option
 			headers: useRequestHeaders(['cookie']),
-		}
-	)
+		})
 
 	const state = reactive({
 		createFormVisible: false,
