@@ -4,6 +4,9 @@
 			<h1 class="text-center mb-4">Create an account 🚀</h1>
 			<div v-if="state.status !== null" class="my-4">
 				{{ state.status }}
+				<div v-if="state.status">
+					Please check your emails for a verification link.
+				</div>
 			</div>
 
 			<form @submit.prevent="handleSubmit" class="w-64 flex flex-col gap-3">

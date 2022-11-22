@@ -4,7 +4,8 @@
 			<h1 class="text-center mb-4">Welcome back!</h1>
 
 			<div v-if="state.status === 'success'" class="my-4">
-				Succesfully signed in!
+				Succesfully signed in! If nothing happens, please refresh the page and
+				try again (SSR error).
 			</div>
 
 			<div v-if="state.status === 'error'" class="my-4">
