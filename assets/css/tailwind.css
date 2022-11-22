@@ -40,7 +40,7 @@
 	button:not(.reset) {
 		@apply px-4 h-8 flex items-center justify-center rounded-full text-sm;
 
-		&:not([data-type='secondary']) {
+		&:not([data-type='secondary']):not([data-type='secondaryActive']) {
 			@apply bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-md text-white;
 			& * {
 				@apply text-white;
@@ -49,6 +49,13 @@
 
 		&[data-type='secondary'] {
 			@apply bg-white border text-gray-700 shadow-sm;
+			& * {
+				@apply text-gray-700;
+			}
+		}
+
+		&[data-type='secondaryActive'] {
+			@apply bg-gray-100 border text-gray-700 shadow-sm;
 			& * {
 				@apply text-gray-700;
 			}
