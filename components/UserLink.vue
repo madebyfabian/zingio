@@ -10,14 +10,12 @@
 		>
 			{{ props.user.name }}
 		</button>
-		<NuxtLink
-			v-else
-			:to="`/@${props.user.handle}`"
-			class="font-bold hover:underline"
-		>
-			{{ props.user.name }}
+		<NuxtLink v-else :to="`/@${props.user.handle}`" class="flex gap-1">
+			<span class="font-bold hover:underline">
+				{{ props.user.name }}
+			</span>
+			<span class="text-gray-500">@{{ props.user.handle }}</span>
 		</NuxtLink>
-		<div class="text-gray-500">@{{ props.user.handle }}</div>
 	</div>
 </template>
 
