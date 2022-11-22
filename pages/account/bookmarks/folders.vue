@@ -37,6 +37,10 @@
 		middleware: 'auth',
 	})
 
+	useHead({
+		title: `Bookmark folders`,
+	})
+
 	const { data: bookmarkFolders, refresh: refreshBookmarkFolders } =
 		await useFetch('/api/bookmarkFolders', {
 			// @ts-expect-error - this is a valid option

@@ -25,6 +25,10 @@
 		middleware: 'auth',
 	})
 
+	useHead({
+		title: `Bookmarks: Unsorted`,
+	})
+
 	const { data: postBookmarkList, refresh: refreshPostBookmarkList } =
 		await useFetch('/api/postBookmarkList', {
 			// @ts-expect-error - this is a valid option

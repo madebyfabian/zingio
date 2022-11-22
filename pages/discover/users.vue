@@ -18,6 +18,10 @@
 <script lang="ts">
 	export default defineComponent({
 		async setup() {
+			useHead({
+				title: `Discover People`,
+			})
+
 			const { data: userDetailsList } = await useFetch('/api/userDetailsList', {
 				// @ts-expect-error - this is a valid option
 				headers: useRequestHeaders(['cookie']),

@@ -22,6 +22,10 @@
 		middleware: 'auth',
 	})
 
+	useHead({
+		title: `Settings`,
+	})
+
 	const currentUserInputState = reactive({
 		name: currentUser.value.name,
 	})

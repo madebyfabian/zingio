@@ -53,6 +53,10 @@
 		throw createError({ statusCode: 404 })
 	}
 
+	useHead({
+		title: `@${data.value.posts[0].authorUser?.name}: ${data.value.posts[0].content}`,
+	})
+
 	const handleCommentCreate = async (postState: PostState) => {
 		const { data: newPost, error: newPostError } = await useFetch(
 			'/api/currentUserCreatePost',

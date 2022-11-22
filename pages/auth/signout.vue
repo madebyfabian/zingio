@@ -8,6 +8,10 @@
 	const supabaseClient = useSupabaseClient()
 	const authUser = useAuthUser()
 
+	useHead({
+		title: `Signing you out...`,
+	})
+
 	const state = reactive({
 		loading: true,
 	})

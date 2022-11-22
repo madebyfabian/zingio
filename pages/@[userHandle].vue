@@ -33,6 +33,10 @@
 	if (!userDetails.value)
 		throw createError({ statusCode: 404, message: 'User not found' })
 
+	useHead({
+		title: `@${userDetails.value.handle}`,
+	})
+
 	const userPosts = useState(`userPosts:${userDetails.value.id}`, () => [])
 	const userPostsMeta = useState<{
 		page?: { more: boolean; cursor: string }

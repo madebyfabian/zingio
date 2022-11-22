@@ -38,4 +38,8 @@
 		})
 	if (!postBookmarkList.value)
 		throw createError({ statusCode: 404, message: 'Data not found' })
+
+	useHead({
+		title: `Bookmarks: ${postBookmarkList.value?.bookmarkFolder?.name}`,
+	})
 </script>

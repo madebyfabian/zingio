@@ -52,6 +52,10 @@
 		layout: 'auth',
 	})
 
+	useHead({
+		title: `Sign up`,
+	})
+
 	const state = reactive({
 		email: '',
 		emailConfirm: '',

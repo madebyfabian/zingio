@@ -21,6 +21,10 @@
 		middleware: 'auth',
 	})
 
+	useHead({
+		title: 'Your Feed',
+	})
+
 	// Fetch `currentUserFeed`
 	const { data } = useLazyFetch('/api/currentUserFeed', {
 		// @ts-expect-error - this is a valid option

@@ -48,6 +48,10 @@
 		layout: 'auth',
 	})
 
+	useHead({
+		title: `Sign in`,
+	})
+
 	const state = reactive({
 		email: '',
 		password: '',
