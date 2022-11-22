@@ -1,10 +1,33 @@
 <template>
 	<div v-if="userDetails">
 		<div class="flex justify-between items-center">
-			<h1 class="mb-0">{{ userDetails?.name }}</h1>
-			<UserFollowButton :user="userDetails" />
+			<div class="flex gap-4 items-center">
+				<div
+					class="rounded-full h-16 w-16 bg-gradient-to-br from-gray-100 to-gray-300"
+				></div>
+				<div>
+					<h1 class="mb-0">{{ userDetails?.name }}</h1>
+					<p class="mt-0 font-normal text-gray-500">
+						@{{ userDetails?.handle }}
+					</p>
+				</div>
+			</div>
+			<button
+				v-if="isCurrentUser"
+				data-type="secondary"
+				@click="() => navigateTo('/account/settings')"
+			>
+				✏️ Edit
+			</button>
+			<UserFollowButton v-if="!isCurrentUser" :user="userDetails" />
 		</div>
-		<p class="mt-0 font-normal text-gray-500">@{{ userDetails?.handle }}</p>
+
+		<p
+			v-if="userDetails.description?.length"
+			class="whitespace-pre-wrap mt-4 max-w-lg"
+		>
+			{{ userDetails.description }}
+		</p>
 
 		<hr class="my-10" />
 
@@ -23,6 +46,7 @@
 
 <script setup lang="ts">
 	const route = useRoute()
+	const authUser = useAuthUser()
 
 	// Fetch `userDetails`
 	const { data: userDetails } = await useFetch('/api/userDetails', {
@@ -32,6 +56,10 @@
 	})
 	if (!userDetails.value)
 		throw createError({ statusCode: 404, message: 'User not found' })
+
+	const isCurrentUser = computed(() => {
+		return authUser.value?.id === userDetails.value?.authId
+	})
 
 	useHead({
 		title: `@${userDetails.value.handle}`,

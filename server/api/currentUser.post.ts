@@ -10,6 +10,7 @@ export default defineEventHandler(async event => {
 				id: z.string(),
 				authId: z.string(),
 				name: z.string().trim().min(1).max(32),
+				description: z.string().optional(),
 				handle: z
 					.string()
 					.trim()
@@ -44,6 +45,7 @@ export default defineEventHandler(async event => {
 	const updatedRecord = await xata.db.user.update({
 		id: body.currentUser.id,
 		name: body.currentUser.name,
+		description: body.currentUser.description,
 		handle: body.currentUser.handle,
 		updatedAt: new Date(),
 	})

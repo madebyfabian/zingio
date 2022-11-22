@@ -3,7 +3,16 @@
 		<div>
 			<div class="mb-8 flex justify-between items-center">
 				<h1>Settings</h1>
-				<button type="submit">Save</button>
+				<div class="flex gap-3 items-center">
+					<button
+						type="button"
+						@click="navigateTo(`/@${currentUser?.handle}`)"
+						data-type="secondary"
+					>
+						Back to Profile
+					</button>
+					<button type="submit">Save</button>
+				</div>
 			</div>
 		</div>
 		<h2 class="my-4">Profile</h2>
@@ -30,6 +39,15 @@
 			<label class="block w-80">
 				<span class="text-sm block mb-1 text-gray-500">@handle</span>
 				<input v-model="currentUserInputState.handle" class="w-full" required />
+			</label>
+
+			<label class="block w-80">
+				<span class="text-sm block mb-1 text-gray-500">Description</span>
+				<textarea
+					v-model="(currentUserInputState.description as string)"
+					class="w-full"
+					rows="7"
+				/>
 			</label>
 		</div>
 	</form>
@@ -58,6 +76,7 @@
 	const currentUserInputState = reactive({
 		name: currentUser.value.name,
 		handle: currentUser.value.handle,
+		description: currentUser.value.description,
 	})
 
 	const handleSave = async () => {
@@ -74,6 +93,7 @@
 					authId: currentUser.value?.authId,
 					name: currentUserInputState.name,
 					handle: currentUserInputState.handle,
+					description: currentUserInputState.description,
 				},
 			},
 		})

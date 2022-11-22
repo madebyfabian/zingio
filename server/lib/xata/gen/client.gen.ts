@@ -38,6 +38,7 @@ const tables = [
       { name: "authId", type: "string", unique: true },
       { name: "createdAt", type: "datetime" },
       { name: "updatedAt", type: "datetime" },
+      { name: "description", type: "text" },
     ],
   },
   {

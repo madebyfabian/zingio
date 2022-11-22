@@ -1,6 +1,5 @@
 <template>
 	<button
-		v-if="props.user?.authId !== authUser?.id"
 		:data-type="isFollowing ? 'secondary' : 'primary'"
 		@click="handleFollowToggle"
 	>
@@ -11,7 +10,6 @@
 <script setup lang="ts">
 	import type { User } from '@/server/lib/xata/gen/client.gen'
 	import { UserExtension } from '@/types'
-	const authUser = useAuthUser()
 
 	const props = defineProps<{
 		user: User & UserExtension
