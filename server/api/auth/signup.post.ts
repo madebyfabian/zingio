@@ -16,13 +16,18 @@ export default defineEventHandler(async event => {
 		})
 	)
 
-	const redirectUrl =
-		import.meta.env.NUXT_ENV_VERCEL_ENV === 'production'
+	const redirectUrl = 'https://twitter-clone-omega-wheat.vercel.app'
+	/*import.meta.env.NUXT_ENV_VERCEL_ENV === 'production'
 			? 'https://twitter-clone-omega-wheat.vercel.app'
-			: 'http://localhost:3000'
+			: 'http://localhost:3000'*/
 
 	const runtimeConfig = useRuntimeConfig()
-	console.log({ redirectUrl, runtimeConfig })
+	console.log({
+		runtimeConfig: runtimeConfig.app.baseURL,
+		env: process.env.NODE_ENV,
+		NUXT_ENV_VERCEL_ENV: import.meta.env.NUXT_ENV_VERCEL_ENV,
+		NUXT_ENV_VERCEL_ENV__using_process: process.env.NUXT_ENV_VERCEL_ENV,
+	})
 
 	// First create the supabase auth user.
 	const { data: authRes, error: authError } = await supabase.auth.signUp({
