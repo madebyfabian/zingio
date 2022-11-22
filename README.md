@@ -12,7 +12,7 @@ A Nuxt 3, TailwindCSS, and Supabase Auth, Xata DB Twitter Clone.
 - Post Likes
 - Profile Settings
 - Bookmark Folders
-- See [Notion Roadmap](https://www.notion.so/madebyfabian/Twitter-2-0-4f80eeac03584de6afeeeccc529e1ae4) for all features.
+- See [Notion Roadmap](https://madebyfabian.notion.site/Nuxt-Twitter-Roadmap-4f80eeac03584de6afeeeccc529e1ae4) for all features.
 
 ## Setup
 
