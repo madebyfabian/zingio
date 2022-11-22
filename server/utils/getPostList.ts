@@ -12,31 +12,31 @@ export const getPostList = async <R extends { id: PostRecord['id'] }[]>({
 }) => {
 	const serverAuthUser = await useServerAuthUser(event)
 
-	// If not authenticated, return bare posts.
-	if (!serverAuthUser) return posts
-
-	const currentUserLikes = !posts.length
-		? []
-		: await xata.db.postLikes
-				.select(['id', 'user.authId', 'post.id', 'post.createdAt'])
-				.filter({
-					user: { authId: serverAuthUser.id },
-					post: {
-						id: { $any: posts.map(post => post.id) },
-					},
-				})
-				.sort('post.createdAt', 'desc')
-				.getMany()
+	// If user logged in, get list of posts they've liked
+	const currentUserLikes =
+		!posts.length || !serverAuthUser
+			? []
+			: await xata.db.postLikes
+					.select(['id', 'user.authId', 'post.id', 'post.createdAt'])
+					.filter({
+						user: { authId: serverAuthUser.id },
+						post: {
+							id: { $any: posts.map(post => post.id) },
+						},
+					})
+					.sort('post.createdAt', 'desc')
+					.getMany()
 
 	return posts.map(post => {
 		const postLike = currentUserLikes.find(
 			postLike => postLike.post?.id === post.id
 		)
-		return {
+		const returnObj: R[0] & { currentUser: { hasLiked?: boolean } } = {
 			...post,
 			currentUser: {
-				hasLiked: !!postLike,
+				hasLiked: !serverAuthUser ? undefined : !!postLike,
 			},
-		} as R[0] & { currentUser: { hasLiked: boolean } }
+		}
+		return returnObj
 	})
 }
