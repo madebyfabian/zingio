@@ -1,6 +1,6 @@
 <template>
-	<div class="flex flex-col gap-4 justify-center min-h-[80vh] items-center">
-		<Card>
+	<div class="flex justify-center min-h-[80vh] items-center">
+		<Card class="flex flex-col gap-4">
 			<h1 class="text-center mb-4">Welcome back!</h1>
 
 			<div v-if="state.status === 'success'" class="my-4">

@@ -1,12 +1,14 @@
 <template>
-	<div class="flex flex-col gap-4 justify-center min-h-[80vh] items-center">
-		<Card>
+	<div class="flex justify-center min-h-[80vh] items-center">
+		<Card class="flex flex-col gap-4 items-center">
 			<h1 class="text-center mb-4">Create an account 🚀</h1>
-			<div v-if="state.status !== null" class="my-4">
+
+			<div v-if="state.status === 'success'" class="my-4">
+				Please check your emails for a verification link.
+			</div>
+
+			<div v-if="state.status === 'error'" class="my-4">
 				{{ state.status }}
-				<div v-if="state.status">
-					Please check your emails for a verification link.
-				</div>
 			</div>
 
 			<form @submit.prevent="handleSubmit" class="w-64 flex flex-col gap-3">
@@ -64,7 +66,7 @@
 	const handleSubmit = async () => {
 		state.status = null
 
-		const { data: newUserRecord, error } = useFetch('/api/auth/signup', {
+		const { data: newUserRecord, error } = await useFetch('/api/auth/signup', {
 			method: 'POST',
 			body: {
 				user: {

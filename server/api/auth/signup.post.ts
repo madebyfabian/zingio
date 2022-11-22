@@ -19,6 +19,12 @@ export default defineEventHandler(async event => {
 	const { data: authRes, error: authError } = await supabase.auth.signUp({
 		email: body.user.email,
 		password: body.user.password,
+		options: {
+			emailRedirectTo:
+				import.meta.env.VERCEL_ENV === 'production'
+					? 'https://twitter-clone-omega-wheat.vercel.app'
+					: 'http://localhost:3000',
+		},
 	})
 	const authId = authRes.user?.id
 	if (!authRes || !authId || authError) {
@@ -28,8 +34,12 @@ export default defineEventHandler(async event => {
 		)
 	}
 
+	// Check if the account in database already exists.
+	const user = await xata.db.user.select(['id']).filter({ authId }).getFirst()
+
 	// Then create the user record in the database.
-	const newUserRecord = await xata.db.user.create({
+	const newUserRecord = await xata.db.user.createOrUpdate({
+		id: user?.id ?? '',
 		authId: authId,
 		handle: `user-${authId}`,
 		createdAt: new Date(),
