@@ -2,6 +2,7 @@ import type { H3Event } from 'h3'
 import { useServerAuthUser } from '@/server/composables/useServerAuthUser'
 import { xata } from '@/server/lib/xata'
 import type { PostRecord } from '@/server/lib/xata/gen/client.gen'
+import { PostExtension } from '@/types'
 
 export const getPostList = async <R extends { id: PostRecord['id'] }[]>({
 	posts,
@@ -31,7 +32,7 @@ export const getPostList = async <R extends { id: PostRecord['id'] }[]>({
 		const postLike = currentUserLikes.find(
 			postLike => postLike.post?.id === post.id
 		)
-		const returnObj: R[0] & { currentUser: { hasLiked?: boolean } } = {
+		const returnObj: R[0] & PostExtension = {
 			...post,
 			currentUser: {
 				hasLiked: !serverAuthUser ? undefined : !!postLike,

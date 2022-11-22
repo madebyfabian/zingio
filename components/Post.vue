@@ -31,7 +31,7 @@
 				<div class="flex gap-3 items-center flex-wrap">
 					<button
 						@click.stop="handlePostLike"
-						:data-type="isLikedByCurrUser ? 'primary' : 'secondary'"
+						:data-type="isLikedByCurrUser ? 'secondaryActive' : 'secondary'"
 						class="gap-1"
 					>
 						👍 Like —
@@ -84,9 +84,7 @@
 
 <script lang="ts">
 	export type PostProps = {
-		post: SelectedPick<PostRecord, ('*' | 'authorUser.*')[]> & {
-			currentUser?: { hasLiked?: boolean }
-		}
+		post: SelectedPick<PostRecord, ('*' | 'authorUser.*')[]> & PostExtension
 		type: 'detail' | 'feed'
 	}
 </script>
@@ -95,15 +93,14 @@
 	import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
 	import type { SelectedPick } from '@xata.io/client'
 	import type { PostRecord } from '@/server/lib/xata/gen/client.gen'
+	import { PostExtension } from '@/types'
 	const currentUserStore = useCurrentUserStore()
 	const currentUser = computed(() => currentUserStore.currentUser)
 	const router = useRouter()
 	const authUser = useAuthUser()
 
 	const _props = defineProps<{
-		post: SelectedPick<PostRecord, ('*' | 'authorUser.*')[]> & {
-			currentUser?: { hasLiked?: boolean }
-		}
+		post: SelectedPick<PostRecord, ('*' | 'authorUser.*')[]> & PostExtension
 		type: 'detail' | 'feed'
 	}>()
 
@@ -130,8 +127,8 @@
 
 	const isDeleted = computed(() => Boolean(postState.value.isDeleted))
 	const isLink = computed(() => _props.type === 'feed')
-	const isLikedByCurrUser = computed(() =>
-		Boolean(postState.value?.currentUser?.hasLiked)
+	const isLikedByCurrUser = computed(
+		() => postState.value?.currentUser?.hasLiked
 	)
 
 	const handleElementClick = (e: Event) => {

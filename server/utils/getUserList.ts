@@ -2,6 +2,7 @@ import type { H3Event } from 'h3'
 import { useServerAuthUser } from '@/server/composables/useServerAuthUser'
 import { xata } from '@/server/lib/xata'
 import type { UserRecord } from '@/server/lib/xata/gen/client.gen'
+import { UserExtension } from '@/types'
 
 export const getUserList = async <R extends { id: UserRecord['id'] }[]>({
 	users,
@@ -28,7 +29,7 @@ export const getUserList = async <R extends { id: UserRecord['id'] }[]>({
 		const userIsFollowing = currentUserIsFollowingUsers.find(
 			userFollowing => userFollowing.followsUser?.id === user.id
 		)
-		const returnObj: R[0] & { currentUser: { isFollowing?: boolean } } = {
+		const returnObj: R[0] & UserExtension = {
 			...user,
 			currentUser: {
 				isFollowing: !serverAuthUser ? undefined : !!userIsFollowing,
