@@ -10,7 +10,7 @@ export default defineEventHandler(async event => {
 				id: z.string(),
 				authId: z.string(),
 				name: z.string().trim().min(1).max(32),
-				description: z.string().optional(),
+				description: z.string().optional().nullable(),
 				handle: z
 					.string()
 					.trim()
