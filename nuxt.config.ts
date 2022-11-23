@@ -1,9 +1,18 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-	modules: ['@nuxtjs/tailwindcss', '@nuxtjs/supabase', '@pinia/nuxt'],
-
 	typescript: {
 		shim: false,
+	},
+
+	modules: ['@nuxtjs/tailwindcss', '@nuxtjs/supabase', '@pinia/nuxt'],
+
+	runtimeConfig: {
+		public: {
+			redirectUrl:
+				process.env.NODE_ENV === 'production'
+					? 'https://zingio.vercel.app'
+					: 'http://localhost:3000',
+		},
 	},
 
 	routeRules: {

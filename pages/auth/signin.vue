@@ -1,7 +1,9 @@
 <template>
-	<div class="flex justify-center min-h-[80vh] items-center">
-		<Card class="flex flex-col gap-4">
-			<h1 class="text-center mb-4">Welcome back!</h1>
+	<div class="flex flex-col gap-8 justify-center min-h-[80vh] items-center">
+		<Logo class="mx-auto mb-4" />
+
+		<Card class="flex w-80 flex-col gap-4">
+			<h1 class="text-center">Welcome back!</h1>
 
 			<div v-if="state.status === 'success'" class="my-4">
 				Succesfully signed in! If nothing happens, please refresh the page and
@@ -12,7 +14,17 @@
 				{{ state.status }}: {{ state.error }}
 			</div>
 
-			<form @submit.prevent="handleSubmit" class="w-64 flex flex-col gap-3">
+			<button type="button" @click="handleAuthWithGitHub">
+				Sign in with GitHub
+			</button>
+
+			<div
+				class="text-xs text-center bg-gray-200 h-[1px] w-full flex items-center justify-center my-6"
+			>
+				<span class="bg-white px-4">or</span>
+			</div>
+
+			<form @submit.prevent="handleSubmit" class="flex flex-col gap-3">
 				<input
 					type="text"
 					v-model="state.email"
@@ -43,6 +55,7 @@
 <script setup lang="ts">
 	const supabase = useSupabaseClient()
 	const authUser = useAuthUser()
+	const runtimeConfig = useRuntimeConfig()
 
 	definePageMeta({
 		layout: 'auth',
@@ -62,6 +75,21 @@
 	watchEffect(() => {
 		if (state.status === 'success' && authUser.value) navigateTo('/')
 	})
+
+	const handleAuthWithGitHub = async () => {
+		const { data, error } = await supabase.auth.signInWithOAuth({
+			provider: 'github',
+			options: {
+				redirectTo: runtimeConfig.public.redirectUrl,
+			},
+		})
+		if (error) {
+			state.status = 'error'
+			state.error = error.message
+		} else {
+			state.status = 'success'
+		}
+	}
 
 	const handleSubmit = async () => {
 		state.status = null

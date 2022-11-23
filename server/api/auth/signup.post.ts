@@ -4,6 +4,7 @@ import { serverSupabaseClient } from '#supabase/server'
 
 export default defineEventHandler(async event => {
 	const supabase = serverSupabaseClient(event)
+	const runtimeConfig = useRuntimeConfig()
 
 	const body = await useValidatedBody(
 		event,
@@ -15,10 +16,7 @@ export default defineEventHandler(async event => {
 		})
 	)
 
-	const redirectUrl =
-		process.env.NODE_ENV === 'production'
-			? 'https://zingio.vercel.app'
-			: 'http://localhost:3000'
+	const redirectUrl = runtimeConfig.public.redirectUrl
 
 	// First create the supabase auth user.
 	const { data: authRes, error: authError } = await supabase.auth.signUp({
