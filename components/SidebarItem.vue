@@ -16,6 +16,6 @@
 
 <style lang="postcss" scoped>
 	a.router-link-exact-active .SidebarItem-text {
-		@apply underline underline-offset-2 decoration-green-400;
+		@apply underline underline-offset-2 decoration-cyan-300;
 	}
 </style>

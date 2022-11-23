@@ -3,13 +3,7 @@
 		class="Sidebar py-8 h-full max-h-screen lg:w-[inherit]"
 		:class="{ 'border-r fixed': !props.asMenu }"
 	>
-		<NuxtLink
-			v-if="!props.asMenu"
-			class="font-black text-3xl tracking-tight text-gray-700 inline-block"
-			to="/"
-		>
-			<span class="text-2xl">💬</span> timmo<span class="opacity-50">.</span>
-		</NuxtLink>
+		<Logo v-if="!props.asMenu" />
 
 		<hr class="my-8" />
 
@@ -49,7 +43,7 @@
 
 		<div class="mt-8 text-xs flex">
 			<a
-				href="https://github.com/madebyfabian/twitter-clone"
+				href="https://github.com/madebyfabian/zingio"
 				target="_blank"
 				rel="noopener noreferrer"
 			>

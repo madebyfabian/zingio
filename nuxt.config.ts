@@ -23,7 +23,7 @@ export default defineNuxtConfig({
 
 	app: {
 		head: {
-			titleTemplate: '%s - Timmo',
+			titleTemplate: '%s - zingio',
 			link: [
 				{
 					rel: 'icon',

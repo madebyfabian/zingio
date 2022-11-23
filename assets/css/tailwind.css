@@ -13,7 +13,7 @@
 	}
 
 	* {
-		@apply outline-emerald-500 accent-emerald-500 text-gray-700;
+		@apply outline-cyan-500 accent-cyan-500 text-gray-700;
 	}
 
 	body {
@@ -38,10 +38,10 @@
 	}
 
 	button:not(.reset) {
-		@apply px-4 h-8 flex items-center justify-center rounded-full text-sm;
+		@apply px-4 h-8 flex font-medium items-center justify-center rounded-full text-sm;
 
 		&:not([data-type='secondary']):not([data-type='secondaryActive']) {
-			@apply bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-md text-white;
+			@apply bg-gradient-to-br from-cyan-500 to-cyan-700 shadow-md text-white;
 			& * {
 				@apply text-white;
 			}

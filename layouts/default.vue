@@ -10,14 +10,7 @@
 
 			<div class="block lg:hidden h-20">
 				<div class="flex justify-between items-center h-full">
-					<NuxtLink
-						class="font-black text-3xl tracking-tight text-gray-700 inline-block"
-						to="/"
-					>
-						<span class="text-2xl">💬</span> timmo<span class="opacity-50"
-							>.</span
-						>
-					</NuxtLink>
+					<Logo />
 					<details>
 						<summary class="relative z-20">Menu</summary>
 						<div class="fixed top-0 right-0 w-full p-3">

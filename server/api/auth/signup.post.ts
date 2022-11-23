@@ -17,7 +17,7 @@ export default defineEventHandler(async event => {
 
 	const redirectUrl =
 		process.env.NODE_ENV === 'production'
-			? 'https://twitter-clone-omega-wheat.vercel.app'
+			? 'https://zingio.vercel.app'
 			: 'http://localhost:3000'
 
 	// First create the supabase auth user.
