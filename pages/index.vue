@@ -15,7 +15,6 @@
 	import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
 	const currentUserStore = useCurrentUserStore()
 	const currentUser = computed(() => currentUserStore.currentUser)
-	if (!currentUser.value) throw createError({ statusCode: 401 })
 
 	definePageMeta({
 		middleware: 'auth',

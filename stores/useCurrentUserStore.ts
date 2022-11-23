@@ -3,6 +3,9 @@ import { defineStore } from 'pinia'
 export const useCurrentUserStore = defineStore('useCurrentUser', () => {
 	const fetchCurrentUser = async () => {
 		try {
+			const authUser = useSupabaseUser()
+			if (!authUser.value) return
+
 			const currentUserRes = await $fetch('/api/currentUser', {
 				// @ts-expect-error - this is a valid option
 				headers: useRequestHeaders(['cookie']),

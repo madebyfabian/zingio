@@ -58,7 +58,6 @@
 </template>
 
 <script setup lang="ts">
-	const authUser = useSupabaseUser()
 	const supabaseAuth = useSupabaseAuthClient()
 	const runtimeConfig = useRuntimeConfig()
 
@@ -77,10 +76,6 @@
 		status: null as null | 'error' | 'success',
 	})
 
-	watchEffect(() => {
-		if (state.status === 'success' && authUser.value) navigateTo('/')
-	})
-
 	const handleAuthWithGitHub = async () => {
 		const { data, error } = await supabaseAuth.auth.signInWithOAuth({
 			provider: 'github',
@@ -88,10 +83,8 @@
 				redirectTo: runtimeConfig.public.redirectUrl,
 			},
 		})
-		if (error) {
+		if (!data || error) {
 			state.status = 'error'
-		} else {
-			state.status = 'success'
 		}
 	}
 

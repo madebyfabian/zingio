@@ -49,7 +49,6 @@
 
 <script setup lang="ts">
 	const supabaseAuth = useSupabaseAuthClient()
-	const authUser = useSupabaseUser()
 	const runtimeConfig = useRuntimeConfig()
 
 	definePageMeta({
@@ -65,10 +64,6 @@
 		password: '',
 		status: null as null | 'error' | 'success',
 		error: null as null | string,
-	})
-
-	watchEffect(() => {
-		if (state.status === 'success' && authUser.value) navigateTo('/')
 	})
 
 	const handleAuthWithGitHub = async () => {

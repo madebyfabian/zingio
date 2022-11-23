@@ -26,7 +26,7 @@
 					>My Profile
 				</SidebarItem>
 				<SidebarItem to="/account/settings" icon="⚙️">Settings</SidebarItem>
-				<SidebarItem to="/auth/signout" icon="🚪">Sign out</SidebarItem>
+				<SidebarItem @click="handleSignout" icon="🚪">Sign out</SidebarItem>
 			</template>
 
 			<template v-else>
@@ -84,8 +84,14 @@
 	import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
 	const currentUserStore = useCurrentUserStore()
 	const currentUser = computed(() => currentUserStore.currentUser)
+	const supabaseAuth = useSupabaseAuthClient()
 
 	const props = defineProps<{
 		asMenu?: boolean
 	}>()
+
+	const handleSignout = async () => {
+		const { error } = await supabaseAuth.auth.signOut()
+		if (error) console.error(error)
+	}
 </script>
