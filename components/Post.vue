@@ -98,7 +98,7 @@
 	const currentUserStore = useCurrentUserStore()
 	const currentUser = computed(() => currentUserStore.currentUser)
 	const router = useRouter()
-	const authUser = useAuthUser()
+	const authUser = useSupabaseUser()
 
 	const _props = defineProps<{
 		post: SelectedPick<PostRecord, ('*' | 'authorUser.*')[]> & PostExtension

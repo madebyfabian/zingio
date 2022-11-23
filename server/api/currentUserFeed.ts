@@ -1,4 +1,4 @@
-import { useServerAuthUser } from '@/server/composables/useServerAuthUser'
+import { serverSupabaseUser } from '#supabase/server'
 import { xata } from '@/server/lib/xata'
 import { getPostList } from '@/server/utils/getPostList'
 
@@ -7,7 +7,7 @@ const nonNullable = <T>(value: T): value is NonNullable<T> => {
 }
 
 export default defineEventHandler(async event => {
-	const serverAuthUser = await useServerAuthUser(event)
+	const serverAuthUser = await serverSupabaseUser(event)
 	if (!serverAuthUser) return sendError(event, createError({ statusCode: 401 }))
 
 	const usersFollowing = await xata.db.userFollowing

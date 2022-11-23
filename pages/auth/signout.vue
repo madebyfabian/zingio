@@ -5,8 +5,8 @@
 </template>
 
 <script setup lang="ts">
-	const supabaseClient = useSupabaseClient()
-	const authUser = useAuthUser()
+	const supabaseAuth = useSupabaseAuthClient()
+	const authUser = useSupabaseUser()
 
 	useHead({
 		title: `Signing you out...`,
@@ -17,7 +17,7 @@
 	})
 
 	onMounted(async () => {
-		const { error } = await supabaseClient.auth.signOut()
+		const { error } = await supabaseAuth.auth.signOut()
 		if (!error) state.loading = false
 	})
 

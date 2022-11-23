@@ -1,5 +1,5 @@
 import type { H3Event } from 'h3'
-import { useServerAuthUser } from '@/server/composables/useServerAuthUser'
+import { serverSupabaseUser } from '#supabase/server'
 import { xata } from '@/server/lib/xata'
 import type { UserRecord } from '@/server/lib/xata/gen/client.gen'
 import { UserExtension } from '@/types'
@@ -11,7 +11,7 @@ export const getUserList = async <R extends { id: UserRecord['id'] }[]>({
 	users: R
 	event: H3Event
 }) => {
-	const serverAuthUser = await useServerAuthUser(event)
+	const serverAuthUser = await serverSupabaseUser(event)
 
 	// If user logged in, get list of users they're following
 	const currentUserIsFollowingUsers =

@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 	const route = useRoute()
-	const authUser = useAuthUser()
+	const authUser = useSupabaseUser()
 
 	// Fetch `userDetails`
 	const { data: userDetails } = await useFetch('/api/userDetails', {

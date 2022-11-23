@@ -50,7 +50,7 @@
 	import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
 	const currentUserStore = useCurrentUserStore()
 	const currentUser = computed(() => currentUserStore.currentUser)
-	const authUser = useAuthUser()
+	const authUser = useSupabaseUser()
 
 	const props = defineProps<{
 		postId: string

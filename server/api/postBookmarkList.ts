@@ -1,5 +1,5 @@
 import { z, zh, useValidatedQuery } from 'h3-zod'
-import { useServerAuthUser } from '@/server/composables/useServerAuthUser'
+import { serverSupabaseUser } from '#supabase/server'
 import { xata } from '@/server/lib/xata'
 import { getPostList } from '@/server/utils/getPostList'
 
@@ -15,7 +15,7 @@ export default defineEventHandler(async event => {
 			onlyUnsorted: zh.boolAsString.optional(),
 		})
 	)
-	const serverAuthUser = await useServerAuthUser(event)
+	const serverAuthUser = await serverSupabaseUser(event)
 	if (!serverAuthUser) return sendError(event, createError({ statusCode: 401 }))
 
 	const [postBookmarkList, bookmarkFolder] = await Promise.all([

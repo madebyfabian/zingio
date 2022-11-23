@@ -1,5 +1,5 @@
 import { z, useValidatedBody } from 'h3-zod'
-import { useServerAuthUser } from '@/server/composables/useServerAuthUser'
+import { serverSupabaseUser } from '#supabase/server'
 import { xata } from '@/server/lib/xata'
 
 export default defineEventHandler(async event => {
@@ -9,7 +9,7 @@ export default defineEventHandler(async event => {
 			userId: z.string(),
 		})
 	)
-	const serverAuthUser = await useServerAuthUser(event)
+	const serverAuthUser = await serverSupabaseUser(event)
 	if (!serverAuthUser) return sendError(event, createError({ statusCode: 401 }))
 
 	// Check if user is already following. And get the user

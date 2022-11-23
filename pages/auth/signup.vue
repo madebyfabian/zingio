@@ -58,8 +58,8 @@
 </template>
 
 <script setup lang="ts">
-	const authUser = useAuthUser()
-	const supabase = useSupabaseClient()
+	const authUser = useSupabaseUser()
+	const supabaseAuth = useSupabaseAuthClient()
 	const runtimeConfig = useRuntimeConfig()
 
 	definePageMeta({
@@ -82,7 +82,7 @@
 	})
 
 	const handleAuthWithGitHub = async () => {
-		const { data, error } = await supabase.auth.signInWithOAuth({
+		const { data, error } = await supabaseAuth.auth.signInWithOAuth({
 			provider: 'github',
 			options: {
 				redirectTo: runtimeConfig.public.redirectUrl,

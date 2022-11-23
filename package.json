@@ -14,7 +14,7 @@
 		"nuxt": "3.0.0"
 	},
 	"dependencies": {
-		"@nuxtjs/supabase": "^0.2.5",
+		"@nuxtjs/supabase": "^0.3.0",
 		"@pinia/nuxt": "^0.4.2",
 		"@xata.io/client": "^0.21.0",
 		"h3-zod": "^0.3.10",

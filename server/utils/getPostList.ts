@@ -1,5 +1,5 @@
 import type { H3Event } from 'h3'
-import { useServerAuthUser } from '@/server/composables/useServerAuthUser'
+import { serverSupabaseUser } from '#supabase/server'
 import { xata } from '@/server/lib/xata'
 import type { PostRecord } from '@/server/lib/xata/gen/client.gen'
 import { PostExtension } from '@/types'
@@ -11,7 +11,7 @@ export const getPostList = async <R extends { id: PostRecord['id'] }[]>({
 	posts: R
 	event: H3Event
 }) => {
-	const serverAuthUser = await useServerAuthUser(event)
+	const serverAuthUser = await serverSupabaseUser(event)
 
 	// If user logged in, get list of posts they've liked
 	const currentUserLikes =

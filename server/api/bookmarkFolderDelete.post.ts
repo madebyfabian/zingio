@@ -1,5 +1,5 @@
 import { z, useValidatedBody } from 'h3-zod'
-import { useServerAuthUser } from '@/server/composables/useServerAuthUser'
+import { serverSupabaseUser } from '#supabase/server'
 import { xata } from '@/server/lib/xata'
 
 export default defineEventHandler(async event => {
@@ -15,7 +15,7 @@ export default defineEventHandler(async event => {
 			}),
 		})
 	)
-	const serverAuthUser = await useServerAuthUser(event)
+	const serverAuthUser = await serverSupabaseUser(event)
 	if (!serverAuthUser) return sendError(event, createError({ statusCode: 401 }))
 	if (serverAuthUser.id !== body.bookmarkFolder.user.authId)
 		return sendError(event, createError({ statusCode: 403 }))

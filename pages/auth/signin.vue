@@ -5,11 +5,6 @@
 		<Card class="flex w-80 flex-col gap-4">
 			<h1 class="text-center">Welcome back!</h1>
 
-			<div v-if="state.status === 'success'" class="my-4">
-				Succesfully signed in! If nothing happens, please refresh the page and
-				try again (SSR error).
-			</div>
-
 			<div v-if="state.status === 'error'" class="my-4">
 				{{ state.status }}: {{ state.error }}
 			</div>
@@ -53,8 +48,8 @@
 </template>
 
 <script setup lang="ts">
-	const supabase = useSupabaseClient()
-	const authUser = useAuthUser()
+	const supabaseAuth = useSupabaseAuthClient()
+	const authUser = useSupabaseUser()
 	const runtimeConfig = useRuntimeConfig()
 
 	definePageMeta({
@@ -77,7 +72,7 @@
 	})
 
 	const handleAuthWithGitHub = async () => {
-		const { data, error } = await supabase.auth.signInWithOAuth({
+		const { data, error } = await supabaseAuth.auth.signInWithOAuth({
 			provider: 'github',
 			options: {
 				redirectTo: runtimeConfig.public.redirectUrl,
@@ -95,7 +90,7 @@
 		state.status = null
 		state.error = null
 
-		const { data, error } = await supabase.auth.signInWithPassword({
+		const { data, error } = await supabaseAuth.auth.signInWithPassword({
 			email: state.email,
 			password: state.password,
 		})
