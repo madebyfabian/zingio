@@ -32,8 +32,8 @@
 		<hr class="my-10" />
 
 		<PostList
-			v-if="userPosts?.length"
 			:posts="userPosts"
+			:pending="userPostsPending"
 			type="feed"
 			stateKey="userDetailPagePostList"
 		/>
@@ -65,6 +65,10 @@
 		title: `@${userDetails.value.handle}`,
 	})
 
+	const userPostsPending = useState(
+		`userPostsPending:${userDetails.value.id}`,
+		() => true
+	)
 	const userPosts = useState(`userPosts:${userDetails.value.id}`, () => [])
 	const userPostsMeta = useState<{
 		page?: { more: boolean; cursor: string }
@@ -95,6 +99,8 @@
 			userPostsMeta.value = res.meta
 		} catch (error) {
 			console.error(error)
+		} finally {
+			if (userPostsPending.value === true) userPostsPending.value = false
 		}
 	}
 </script>

@@ -11,8 +11,7 @@
 		</div>
 
 		<PostList
-			v-if="postBookmarkList?.posts"
-			:posts="postBookmarkList.posts"
+			:posts="postBookmarkList?.posts || null"
 			type="feed"
 			variant="bookmarks"
 			stateKey="accountBookmarksUnsortedPagePostList"
@@ -29,12 +28,11 @@
 		title: `Bookmarks: Unsorted`,
 	})
 
-	const { data: postBookmarkList, refresh: refreshPostBookmarkList } =
-		await useFetch('/api/postBookmarkList', {
-			// @ts-expect-error - this is a valid option
-			headers: useRequestHeaders(['cookie']),
-			params: { onlyUnsorted: true },
-		})
+	const { data: postBookmarkList } = await useFetch('/api/postBookmarkList', {
+		// @ts-expect-error - this is a valid option
+		headers: useRequestHeaders(['cookie']),
+		params: { onlyUnsorted: true },
+	})
 	if (!postBookmarkList.value)
 		throw createError({ statusCode: 404, message: 'Data not found' })
 </script>

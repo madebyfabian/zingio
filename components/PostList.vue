@@ -1,18 +1,21 @@
 <template>
-	<div v-if="posts?.length">
-		<Post
-			v-for="post of posts"
-			:key="post.id"
-			:post="post"
-			:type="_props.type"
-			@postDeleted="handlePostDeleted"
-			@postBookmarkChanged="handlePostBookmarkChanged"
-			@openCommentForm="handleOpenCommentForm"
-		/>
+	<div v-if="!pending">
+		<div v-if="posts?.length">
+			<Post
+				v-for="post of posts"
+				:key="post.id"
+				:post="post"
+				:type="_props.type"
+				@postDeleted="handlePostDeleted"
+				@postBookmarkChanged="handlePostBookmarkChanged"
+				@openCommentForm="handleOpenCommentForm"
+			/>
+		</div>
+		<div v-else class="bg-gray-100 rounded-xl p-6 text-center text-gray-500">
+			No posts here yet 👀.
+		</div>
 	</div>
-	<div v-else class="bg-gray-100 rounded-xl p-6 text-center text-gray-500">
-		No posts here yet 👀.
-	</div>
+	<LoadingIndicator v-else layout="fill" />
 </template>
 
 <script setup lang="ts">
@@ -23,6 +26,7 @@
 	const _props = withDefaults(
 		defineProps<{
 			posts: PostProps['post'][] | null
+			pending?: boolean
 			type: PostProps['type']
 			variant?: 'default' | 'bookmarks'
 			stateKey: string

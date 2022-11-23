@@ -3,8 +3,8 @@
 		<h1 class="mb-4">Hi, {{ currentUser?.name }} 👋</h1>
 
 		<PostList
-			v-if="data?.length"
 			:posts="data"
+			:pending="pending"
 			type="feed"
 			stateKey="homepagePostList"
 		/>
@@ -25,7 +25,7 @@
 	})
 
 	// Fetch `currentUserFeed`
-	const { data } = useLazyFetch('/api/currentUserFeed', {
+	const { data, pending } = useLazyFetch('/api/currentUserFeed', {
 		// @ts-expect-error - this is a valid option
 		headers: useRequestHeaders(['cookie']),
 	})

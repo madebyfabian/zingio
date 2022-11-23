@@ -14,8 +14,7 @@
 		</div>
 
 		<PostList
-			v-if="postBookmarkList?.posts"
-			:posts="postBookmarkList.posts"
+			:posts="postBookmarkList?.posts || null"
 			type="feed"
 			variant="bookmarks"
 			stateKey="accountBookmarksFolderPagePostList"
@@ -30,7 +29,7 @@
 		middleware: 'auth',
 	})
 
-	const { data: postBookmarkList, refresh: postBookmarkListRefresh } =
+	const { data: postBookmarkList, pending: postBookmarkListPending } =
 		await useFetch('/api/postBookmarkList', {
 			// @ts-expect-error - this is a valid option
 			headers: useRequestHeaders(['cookie']),

@@ -1,8 +1,7 @@
 <template>
 	<div>
 		<PostList
-			v-if="data?.posts.length"
-			:posts="data.posts"
+			:posts="data?.posts || null"
 			type="detail"
 			@openCommentForm="() => (state.isCommentFormOpen = true)"
 			stateKey="postDetailEntryPostList"
