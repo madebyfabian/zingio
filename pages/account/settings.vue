@@ -15,6 +15,7 @@
 				</div>
 			</div>
 		</div>
+
 		<h2 class="my-4">Profile</h2>
 		<div class="my-4" v-if="state.error === true">
 			Error saving. Make sure your @handle is 3-20 chars. Only letters (a-z,
@@ -50,12 +51,29 @@
 				/>
 			</label>
 		</div>
+
+		<h2 class="mt-10">Login Providers</h2>
+
+		<ul class="divide-y mt-4">
+			<li
+				v-for="identity of authUser?.identities"
+				:key="identity.id"
+				class="py-4 flex flex-wrap gap-x-8 gap-y-2"
+			>
+				<div class="capitalize font-bold w-40">{{ identity.provider }}</div>
+
+				<div>
+					<div class="text-gray-500 text-sm">Last used</div>
+					<div>{{ formatDate(identity.last_sign_in_at) }}</div>
+				</div>
+			</li>
+		</ul>
 	</form>
 </template>
 
 <script setup lang="ts">
 	import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
-	import { Base } from '../../.nuxt/components'
+	const authUser = useSupabaseUser()
 	const currentUserStore = useCurrentUserStore()
 	const currentUser = computed(() => currentUserStore.currentUser)
 	if (!currentUser.value) throw createError({ statusCode: 401 })
@@ -78,6 +96,10 @@
 		handle: currentUser.value.handle,
 		description: currentUser.value.description,
 	})
+
+	const formatDate = (date: string) => {
+		return new Date(date).toLocaleString()
+	}
 
 	const handleSave = async () => {
 		state.error = null
