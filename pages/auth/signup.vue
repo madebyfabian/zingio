@@ -13,9 +13,9 @@
 				{{ state.status }}
 			</div>
 
-			<button type="button" @click="handleAuthWithGitHub">
+			<!--<button type="button" @click="handleAuthWithGitHub">
 				Sign up with GitHub
-			</button>
+			</button>-->
 
 			<div
 				class="text-xs text-center bg-gray-200 h-[1px] w-full flex items-center justify-center my-6"
