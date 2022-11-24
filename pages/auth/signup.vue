@@ -13,9 +13,9 @@
 				{{ state.status }}
 			</div>
 
-			<!--<button type="button" @click="handleAuthWithGitHub">
+			<button type="button" @click="handleAuthWithGitHub">
 				Sign up with GitHub
-			</button>-->
+			</button>
 
 			<div
 				class="text-xs text-center bg-gray-200 h-[1px] w-full flex items-center justify-center my-6"
@@ -80,12 +80,14 @@
 		const { data, error } = await supabaseAuth.auth.signInWithOAuth({
 			provider: 'github',
 			options: {
-				redirectTo: runtimeConfig.public.redirectUrl,
+				redirectTo: runtimeConfig.public.redirectUrl + '/?callback=github',
 			},
 		})
 		if (!data || error) {
 			state.status = 'error'
 		}
+
+		console.log(JSON.stringify(await supabaseAuth.auth.refreshSession()))
 	}
 
 	const handleSubmit = async () => {
