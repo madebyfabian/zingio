@@ -86,8 +86,6 @@
 		if (!data || error) {
 			state.status = 'error'
 		}
-
-		console.log(JSON.stringify(await supabaseAuth.auth.refreshSession()))
 	}
 
 	const handleSubmit = async () => {
