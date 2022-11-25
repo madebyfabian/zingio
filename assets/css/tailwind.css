@@ -41,7 +41,7 @@
 		@apply px-4 h-8 flex font-medium items-center justify-center rounded-full text-sm;
 
 		&:not([data-type='secondary']):not([data-type='secondaryActive']) {
-			@apply bg-gradient-to-br from-cyan-500 to-cyan-700 shadow-md text-white;
+			@apply bg-cyan-500 shadow-md text-white;
 			& * {
 				@apply text-white;
 			}
