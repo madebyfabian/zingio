@@ -1,6 +1,7 @@
 import { z, useValidatedBody } from 'h3-zod'
 import { serverSupabaseUser } from '#supabase/server'
-import { xata } from '@/server/lib/xata'
+import { edgeDB } from '@/server/utils/v2/edgeDB'
+import e from '@/dbschema/edgeql-js'
 
 export default defineEventHandler(async event => {
 	const body = await useValidatedBody(
@@ -8,7 +9,6 @@ export default defineEventHandler(async event => {
 		z.object({
 			bookmarkFolder: z.object({
 				user: z.object({
-					id: z.string(),
 					authId: z.string(),
 				}),
 				id: z.string(),
@@ -20,11 +20,17 @@ export default defineEventHandler(async event => {
 	if (serverAuthUser.id !== body.bookmarkFolder.user.authId)
 		return sendError(event, createError({ statusCode: 403 }))
 
-	const deletedRecord = await xata.db.bookmarkFolder.delete({
-		id: body.bookmarkFolder.id,
-		user: body.bookmarkFolder.user.id,
-	})
-	if (!deletedRecord) return sendError(event, createError({ statusCode: 500 }))
+	try {
+		const query = e.delete(e.BookmarkFolder, bookmarkFolder => ({
+			filter_single: { id: body.bookmarkFolder.id },
+		}))
 
-	return deletedRecord
+		const deletedRecord = await query.run(edgeDB)
+		if (!deletedRecord)
+			return sendError(event, createError({ statusCode: 410 }))
+		return deletedRecord
+	} catch (error) {
+		console.error(error)
+		return sendError(event, createError({ statusCode: 500 }))
+	}
 })

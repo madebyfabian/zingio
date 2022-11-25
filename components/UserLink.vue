@@ -6,12 +6,19 @@
 			role="link"
 			@click.self="handleElementClick"
 			@keydown.self.enter="handleElementClick"
-			class="reset font-bold hover:underline"
+			class="reset hover:underline"
 		>
-			{{ props.user.name }}
+			<span class="font-bold flex gap-1">
+				{{ props.user.name }}
+			</span>
+			<span class="text-gray-500">@{{ props.user.handle }}</span>
 		</button>
-		<NuxtLink v-else :to="`/@${props.user.handle}`" class="flex gap-1">
-			<span class="font-bold hover:underline">
+		<NuxtLink
+			v-else
+			:to="`/@${props.user.handle}`"
+			class="flex gap-1 hover:underline"
+		>
+			<span class="font-bold">
 				{{ props.user.name }}
 			</span>
 			<span class="text-gray-500">@{{ props.user.handle }}</span>
@@ -20,10 +27,10 @@
 </template>
 
 <script setup lang="ts">
-	import type { User } from '@/server/lib/xata/gen/client.gen'
+	import type { UserListItem } from '@/server/api/v2/user/list'
 
 	const props = defineProps<{
-		user: User
+		user: UserListItem
 		asButton?: boolean
 	}>()
 

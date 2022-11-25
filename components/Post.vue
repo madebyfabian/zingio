@@ -35,7 +35,7 @@
 						class="gap-1"
 					>
 						👍 Like —
-						<span class="font-bold">{{ postState.countTotalLikes }}</span>
+						<span class="font-bold">{{ postState._count_postReactions }}</span>
 					</button>
 
 					<button
@@ -44,7 +44,7 @@
 						class="gap-1"
 					>
 						💬 Comment —
-						<span>{{ postState.countTotalComments }}</span>
+						<span>{{ postState._count_postComments }}</span>
 					</button>
 
 					<button
@@ -67,7 +67,7 @@
 
 				<div class="flex gap-3 items-center">
 					<button
-						v-if="authUser?.id === postState.authorUser?.authId"
+						v-if="currentUser?.id === postState.authorUser?.id"
 						@click.stop="handleDeletePost"
 						data-type="secondary"
 						class="gap-1"
@@ -84,25 +84,23 @@
 
 <script lang="ts">
 	export type PostProps = {
-		post: SelectedPick<PostRecord, ('*' | 'authorUser.*')[]> & PostExtension
+		post: BasePost
 		type: 'detail' | 'feed'
 	}
 </script>
 
 <script setup lang="ts">
 	import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
-	import type { SelectedPick } from '@xata.io/client'
-	import type { PostRecord } from '@/server/lib/xata/gen/client.gen'
-	import type { PostExtension } from '@/types'
 	import type { EmitReturnAction } from '@/components/PostBookmarkDialogForm.vue'
+	import type { BasePost } from '@/server/api/v2/feed/home'
 	const currentUserStore = useCurrentUserStore()
 	const currentUser = computed(() => currentUserStore.currentUser)
 	const router = useRouter()
 	const authUser = useSupabaseUser()
 
 	const _props = defineProps<{
-		post: SelectedPick<PostRecord, ('*' | 'authorUser.*')[]> & PostExtension
-		type: 'detail' | 'feed'
+		post: PostProps['post']
+		type: PostProps['type']
 	}>()
 
 	const emit = defineEmits<{
@@ -134,7 +132,7 @@
 	const isDeleted = computed(() => Boolean(postState.value.isDeleted))
 	const isLink = computed(() => _props.type === 'feed')
 	const isLikedByCurrUser = computed(
-		() => postState.value?.currentUser?.hasLiked
+		() => postState.value._currentUserPostReaction
 	)
 
 	const handleElementClick = (e: Event) => {
@@ -146,9 +144,8 @@
 
 	const handlePostLike = async () => {
 		const newState = !isLikedByCurrUser.value
-		if (typeof postState.value?.currentUser?.hasLiked === 'boolean')
-			postState.value.currentUser.hasLiked = newState
-		postState.value.countTotalLikes += newState ? 1 : -1
+		postState.value._currentUserPostReaction = newState
+		postState.value._count_postReactions += newState ? 1 : -1
 
 		const { data, error } = await useFetch('/api/currentUserPostLike', {
 			method: 'POST',

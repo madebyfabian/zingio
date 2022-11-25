@@ -46,6 +46,11 @@
 			<div class="mt-4">
 				<div v-if="!state.editMode" class="font-bold text-lg">
 					{{ bookmarkFolder.name }}
+					{{
+						typeof bookmarkFolder._count_hasBookmarks === 'number'
+							? `(${bookmarkFolder._count_hasBookmarks})`
+							: null
+					}}
 				</div>
 				<input
 					v-else
@@ -61,21 +66,11 @@
 </template>
 
 <script lang="ts">
-	export type BookmarkFolderItem = Omit<
-		SelectedPick<BookmarkFolderRecord, ('*' | 'user.id' | 'user.authId')[]>,
-		| 'delete'
-		| 'getMetadata'
-		| 'read'
-		| 'update'
-		| 'replace'
-		| 'updatedAt'
-		| 'createdAt'
-	>
+	export type BookmarkFolderItem = BookmarkFolderListItem
 </script>
 
 <script setup lang="ts">
-	import type { BookmarkFolderRecord } from '@/server/lib/xata/gen/client.gen'
-	import type { SelectedPick } from '@xata.io/client'
+	import type { BookmarkFolderListItem } from '@/server/api/v2/bookmark/folder/list'
 
 	const state = reactive({
 		editMode: false,

@@ -29,7 +29,11 @@
 					"
 					class="reset py-4 flex w-full justify-between items-center"
 				>
-					<span>{{ bookmarkFolder.icon }} {{ bookmarkFolder.name }}</span>
+					<span
+						>{{ bookmarkFolder.icon }} {{ bookmarkFolder.name }} ({{
+							bookmarkFolder._count_hasBookmarks
+						}})</span
+					>
 					<span
 						v-if="isBookmarkedInFolder({ bookmarkFolderId: bookmarkFolder.id })"
 						>✅</span
@@ -76,9 +80,8 @@
 	}
 
 	const { data: bookmarkFolders, pending: bookmarkFoldersPending } =
-		useLazyFetch('/api/bookmarkFolders', {
-			// @ts-expect-error - this is a valid option
-			headers: useRequestHeaders(['cookies']),
+		useLazyFetch('/api/v2/bookmark/folder/list', {
+			headers: useRequestHeaders(['cookies']) as Record<string, any>,
 		})
 
 	const { data: postBookmark, pending: postBookmarkPending } = useLazyFetch(

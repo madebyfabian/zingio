@@ -24,9 +24,7 @@
 		title: 'Your Feed',
 	})
 
-	// Fetch `currentUserFeed`
-	const { data, pending } = useLazyFetch('/api/currentUserFeed', {
-		// @ts-expect-error - this is a valid option
-		headers: useRequestHeaders(['cookie']),
+	const { data, pending } = useLazyFetch('/api/v2/feed/home', {
+		headers: useRequestHeaders(['cookie']) as Record<string, any>,
 	})
 </script>
