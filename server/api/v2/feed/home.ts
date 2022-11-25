@@ -24,8 +24,11 @@ export const basePost = e.shape(e.Post, post => ({
 	order_by: post.createdAt,
 }))
 
+const basePostTypeQuery = e.select(e.Post, post => ({
+	...basePost(post),
+}))
 /** @todo make this reusable, check for `_currentUserPostReaction` in code. */
-export type BasePost = $infer<typeof basePost>[0] & {
+export type BasePost = $infer<typeof basePostTypeQuery>[0] & {
 	_currentUserPostReaction: boolean
 }
 
