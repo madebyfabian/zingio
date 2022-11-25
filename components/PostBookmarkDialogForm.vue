@@ -5,7 +5,7 @@
 		<ul
 			v-if="
 				!bookmarkFoldersPending &&
-				!postBookmarkPending &&
+				!bookmarkPending &&
 				Array.isArray(bookmarkFolders)
 			"
 			class="divide-y divide-gray-200"
@@ -53,7 +53,6 @@
 <script setup lang="ts">
 	import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
 	const currentUserStore = useCurrentUserStore()
-	const currentUser = computed(() => currentUserStore.currentUser)
 	const authUser = useSupabaseUser()
 
 	const props = defineProps<{
@@ -65,7 +64,7 @@
 	}>()
 
 	const isBookmarkedInUnsortedFolder = computed(() => {
-		return postBookmark.value && !postBookmark.value?.bookmarkFolder?.id
+		return bookmark.value && !bookmark.value?.bookmarkFolder?.id
 	})
 
 	const isBookmarkedInFolder = ({
@@ -75,22 +74,24 @@
 	}) => {
 		return (
 			bookmarkFolderId &&
-			postBookmark.value?.bookmarkFolder?.id === bookmarkFolderId
+			bookmark.value?.bookmarkFolder?.id === bookmarkFolderId
 		)
 	}
 
+	// Fetch list of all bookmark folders to display as options
 	const { data: bookmarkFolders, pending: bookmarkFoldersPending } =
 		useLazyFetch('/api/v2/bookmark/folder/list', {
 			headers: useRequestHeaders(['cookies']) as Record<string, any>,
 		})
 
-	const { data: postBookmark, pending: postBookmarkPending } = useLazyFetch(
-		'/api/postBookmark',
+	// Fetch single bookmark to check whether the post is already bookmarked.
+	const { data: bookmark, pending: bookmarkPending } = useLazyFetch(
+		'/api/v2/bookmark/details',
 		{
-			// @ts-expect-error - this is a valid option
-			headers: useRequestHeaders(['cookies']),
+			headers: useRequestHeaders(['cookies']) as Record<string, any>,
 			params: {
 				postId: props.postId,
+				bookmarkUserAuthId: authUser.value?.id,
 			},
 		}
 	)
@@ -110,17 +111,15 @@
 
 		// If user clicks same folder, then we want to delete it
 		if (willDelete) {
-			const { data, error } = await useFetch('/api/postBookmarkDelete', {
+			const { data, error } = await useFetch('/api/v2/bookmark/remove', {
 				method: 'POST',
-				// @ts-expect-error - this is a valid option
-				headers: useRequestHeaders(['cookies']),
+				headers: useRequestHeaders(['cookies']) as Record<string, any>,
 				body: JSON.stringify({
-					postBookmark: {
+					bookmark: {
 						user: {
-							id: currentUser.value?.id,
 							authId: authUser.value?.id,
 						},
-						id: postBookmark.value?.id,
+						id: bookmark.value?.id,
 					},
 				}),
 			})
@@ -130,17 +129,16 @@
 				returnAction = 'deleted'
 			}
 		} else {
-			const { data, error } = await useFetch('/api/postBookmark', {
+			const { data, error } = await useFetch('/api/v2/bookmark/addOrUpdate', {
 				method: 'POST',
 				// @ts-expect-error - this is a valid option
 				headers: useRequestHeaders(['cookies']),
 				body: {
-					postBookmark: {
+					bookmark: {
 						user: {
-							id: currentUser.value?.id,
 							authId: authUser.value?.id,
 						},
-						id: postBookmark.value?.id ?? undefined,
+						id: bookmark.value?.id ?? undefined,
 						post: {
 							id: props.postId,
 						},
@@ -155,7 +153,7 @@
 			if (!data.value || error.value) {
 				console.error(error.value)
 			} else {
-				returnAction = postBookmark.value?.id ? 'updated' : 'created'
+				returnAction = bookmark.value?.id ? 'updated' : 'created'
 			}
 		}
 

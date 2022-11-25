@@ -49,16 +49,16 @@
 
 					<button
 						data-type="secondary"
-						@click.stop="state.postBookmarkDialogOpen = true"
+						@click.stop="state.bookmarkDialogOpen = true"
 					>
 						🔖 Bookmark
 					</button>
 					<UIDialog
-						:isOpen="state.postBookmarkDialogOpen"
-						@close="state.postBookmarkDialogOpen = false"
+						:isOpen="state.bookmarkDialogOpen"
+						@close="state.bookmarkDialogOpen = false"
 					>
 						<PostBookmarkDialogForm
-							v-if="state.postBookmarkDialogOpen"
+							v-if="state.bookmarkDialogOpen"
 							:postId="postState.id"
 							@afterSubmit="handleAfterPostBookmarkSubmit"
 						/>
@@ -105,16 +105,12 @@
 
 	const emit = defineEmits<{
 		(e: 'postDeleted', postId: string): void
-		(
-			e: 'postBookmarkChanged',
-			postId: string,
-			returnAction: EmitReturnAction
-		): void
+		(e: 'bookmarkChanged', postId: string, returnAction: EmitReturnAction): void
 		(e: 'openCommentForm'): void
 	}>()
 
 	const state = reactive({
-		postBookmarkDialogOpen: false,
+		bookmarkDialogOpen: false,
 	})
 
 	const postState = useState<typeof _props.post>(
@@ -183,7 +179,7 @@
 	}
 
 	const handleAfterPostBookmarkSubmit = (returnAction: EmitReturnAction) => {
-		state.postBookmarkDialogOpen = false
-		emit('postBookmarkChanged', postState.value.id, returnAction)
+		state.bookmarkDialogOpen = false
+		emit('bookmarkChanged', postState.value.id, returnAction)
 	}
 </script>
