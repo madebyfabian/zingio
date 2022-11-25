@@ -39,6 +39,7 @@ export default defineEventHandler(async event => {
 			const query = e.update(e.Bookmark, _ => ({
 				set: {
 					// override bookmarkFolder
+					// @ts-ignore
 					bookmarkFolder: bookmarkFolderNew
 						? e.select(e.BookmarkFolder, bookmarkFolder => ({
 								...e.BookmarkFolder['*'],
@@ -63,6 +64,7 @@ export default defineEventHandler(async event => {
 				post: e.select(e.Post, _ => ({
 					filter_single: { id: e.uuid(body.bookmark.post.id) },
 				})),
+				// @ts-ignore
 				bookmarkFolder: bookmarkFolderNew
 					? e.select(e.BookmarkFolder, _ => ({
 							filter_single: { id: e.uuid(bookmarkFolderNew.id || '') },
