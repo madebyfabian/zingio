@@ -13,8 +13,6 @@
 			</h1>
 		</div>
 
-		<pre>{{ postList }}</pre>
-
 		<PostList
 			:posts="postList"
 			type="feed"
