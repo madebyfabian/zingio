@@ -42,8 +42,7 @@
 
 	// Fetch `userDetails`
 	const { data, refresh } = await useFetch('/api/postDetails', {
-		// @ts-expect-error - this is a valid option
-		headers: useRequestHeaders(['cookie']),
+		headers: useRequestHeaders(['cookie']) as Record<string, any>,
 		params: {
 			postId: route.params.postId,
 		},

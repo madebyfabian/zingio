@@ -50,8 +50,7 @@
 
 	// Fetch `userDetails`
 	const { data: userDetails } = await useFetch('/api/userDetails', {
-		// @ts-expect-error - this is a valid option
-		headers: useRequestHeaders(['cookie']),
+		headers: useRequestHeaders(['cookie']) as Record<string, any>,
 		params: { userHandle: route.params.userHandle },
 	})
 	if (!userDetails.value)
@@ -86,8 +85,7 @@
 
 		try {
 			const res = await $fetch('/api/userPosts', {
-				// @ts-expect-error - this is a valid option
-				headers: useRequestHeaders(['cookie']),
+				headers: useRequestHeaders(['cookie']) as Record<string, any>,
 				params: {
 					userHandle: route.params.userHandle,
 					paginationCursor: paginationCursor ?? undefined,

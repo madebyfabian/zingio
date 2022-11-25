@@ -23,8 +23,7 @@
 
 		const { data, error } = await useFetch('/api/currentUserIsFollowingUser', {
 			method: 'POST',
-			// @ts-expect-error - this is a valid option
-			headers: useRequestHeaders(['cookie']),
+			headers: useRequestHeaders(['cookie']) as Record<string, any>,
 			body: {
 				userId: props.user.id,
 			},

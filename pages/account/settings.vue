@@ -107,8 +107,7 @@
 
 		const { data, error } = await useFetch('/api/currentUser', {
 			method: 'POST',
-			// @ts-expect-error - this is a valid option
-			headers: useRequestHeaders(['cookie']),
+			headers: useRequestHeaders(['cookie']) as Record<string, any>,
 			body: {
 				currentUser: {
 					id: currentUser.value?.id,

@@ -145,8 +145,7 @@
 
 		const { data, error } = await useFetch('/api/currentUserPostLike', {
 			method: 'POST',
-			// @ts-expect-error - this is a valid option
-			headers: useRequestHeaders(['cookie']),
+			headers: useRequestHeaders(['cookie']) as Record<string, any>,
 			body: {
 				postId: postState.value.id,
 				user: {
@@ -161,8 +160,7 @@
 	const handleDeletePost = async () => {
 		const { data, error } = await useFetch('/api/postDelete', {
 			method: 'POST',
-			// @ts-expect-error - this is a valid option
-			headers: useRequestHeaders(['cookie']),
+			headers: useRequestHeaders(['cookie']) as Record<string, any>,
 			body: {
 				post: {
 					authorUser: {

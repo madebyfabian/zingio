@@ -23,8 +23,7 @@
 			})
 
 			const { data: userDetailsList } = await useFetch('/api/userDetailsList', {
-				// @ts-expect-error - this is a valid option
-				headers: useRequestHeaders(['cookie']),
+				headers: useRequestHeaders(['cookie']) as Record<string, any>,
 			})
 
 			return { userDetailsList }
