@@ -35,7 +35,11 @@
 		{
 			headers: useRequestHeaders(['cookie']) as Record<string, any>,
 			params: {
-				bookmarkFolderId: route.params.bookmarkFolderId,
+				bookmarkFolderId:
+					route.params.bookmarkFolderId === 'unsorted'
+						? null
+						: route.params.bookmarkFolderId,
+				bookmarkFolderUnsorted: route.params.bookmarkFolderId === 'unsorted',
 				bookmarkFolderUserAuthId: authUser.value?.id,
 			},
 		}

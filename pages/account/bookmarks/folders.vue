@@ -10,7 +10,7 @@
 			v-if="Array.isArray(bookmarkFolders)"
 		>
 			<BookmarkFolderItem
-				:bookmarkFolder="({ name: 'Unsorted', icon: '📬', id: 'unsorted' } as any)"
+				:bookmarkFolder="({ name: 'Unsorted', icon: '💬', id: 'unsorted' } as any)"
 				isReadOnly
 			/>
 
