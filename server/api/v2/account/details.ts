@@ -23,17 +23,14 @@ export default defineEventHandler(async event => {
 
 		// There may be no `currentUser` bcs. user signed up with github, but does not have a record in the db.
 		// If so, create the user record in the database.
-		const newUserRecord = await newUserQuery.run(edgeDB, {
+		await newUserQuery.run(edgeDB, {
 			authId: serverAuthUser.id,
 		})
 
 		// Get new user record
-		const currentNewUser = await getUserQuery.run(edgeDB, {
+		return await getUserQuery.run(edgeDB, {
 			authId: serverAuthUser.id,
 		})
-		if (!newUserRecord)
-			return sendError(event, createError({ statusCode: 500 }))
-		return currentNewUser
 	} catch (error) {
 		console.error(error)
 		return sendError(event, createError({ statusCode: 500 }))

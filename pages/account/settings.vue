@@ -105,12 +105,11 @@
 		state.error = null
 		state.success = null
 
-		const { data, error } = await useFetch('/api/currentUser', {
+		const { data, error } = await useFetch('/api/v2/account/update', {
 			method: 'POST',
 			headers: useRequestHeaders(['cookie']) as Record<string, any>,
 			body: {
-				currentUser: {
-					id: currentUser.value?.id,
+				account: {
 					authId: currentUser.value?.authId,
 					name: currentUserInputState.name,
 					handle: currentUserInputState.handle,
@@ -123,7 +122,7 @@
 				state.error = 'This @handle is already taken.'
 			else state.error = true
 			state.success = false
-			return console.error(error)
+			return console.error(error.value)
 		}
 		state.success = true
 
