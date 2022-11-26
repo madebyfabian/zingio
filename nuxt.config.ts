@@ -11,6 +11,10 @@ export default defineNuxtConfig({
 		},
 	},
 
+	build: {
+		transpile: ['edgedb', '@edgedb/generate'],
+	},
+
 	modules: ['@nuxtjs/tailwindcss', '@nuxtjs/supabase', '@pinia/nuxt'],
 
 	runtimeConfig: {
