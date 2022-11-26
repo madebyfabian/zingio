@@ -1,5 +1,5 @@
 module default {
-  type User {
+  type User extending has::CreatedAndUpdatedAt {
     required property handle -> str {
       constraint exclusive;
     };
@@ -8,16 +8,8 @@ module default {
       constraint exclusive;
     }
     property description -> str;
-    required property createdAt -> cal::local_datetime {
-      default := cal::to_local_datetime(datetime_current(), 'UTC');
-    }
-    required property updatedAt -> cal::local_datetime {
-      default := cal::to_local_datetime(datetime_current(), 'UTC');
-    }
-    multi link followingUsers -> User {
-      property followingSince -> cal::local_datetime {
-        default := cal::to_local_datetime(datetime_current(), 'UTC');
-      }
+    multi link followingUsers extending has::createdAndUpdatedAt -> User {
+      on target delete allow
     };
 
     # Backlinks, meaning that the data is stored on the target, not here.
@@ -29,31 +21,21 @@ module default {
     index on (.authId);
   }
 
-  type Post {
+  type Post extending has::CreatedAndUpdatedAt {
     required property content -> str;
-    required property createdAt -> cal::local_datetime {
-      default := cal::to_local_datetime(datetime_current(), 'UTC');
-    }
-    required property updatedAt -> cal::local_datetime {
-      default := cal::to_local_datetime(datetime_current(), 'UTC');
-    }
     required property isDeleted -> bool {
       default := false;
     }
-    link replyToPost -> Post;
+    link replyToPost -> Post {
+      on target delete allow
+    };
     required link authorUser -> User;
 
     # Backlinks, meaning that the data is stored on the target, not here.
     multi link allPostReactions := .<post[is PostReaction];
   }
 
-  type PostReaction {
-    required property createdAt -> cal::local_datetime {
-      default := cal::to_local_datetime(datetime_current(), 'UTC');
-    }
-    required property updatedAt -> cal::local_datetime {
-      default := cal::to_local_datetime(datetime_current(), 'UTC');
-    }
+  type PostReaction extending has::CreatedAndUpdatedAt {
     required link user -> User {
       on target delete delete source;
     };
@@ -64,13 +46,7 @@ module default {
     constraint exclusive on ((.user, .post));
   }
 
-  type Bookmark {
-    required property createdAt -> cal::local_datetime {
-      default := cal::to_local_datetime(datetime_current(), 'UTC');
-    }
-    required property updatedAt -> cal::local_datetime {
-      default := cal::to_local_datetime(datetime_current(), 'UTC');
-    }
+  type Bookmark extending has::CreatedAndUpdatedAt {
     required link user -> User;
     required link post -> Post;
     link bookmarkFolder -> BookmarkFolder;
@@ -79,12 +55,6 @@ module default {
   type BookmarkFolder {
     required property name -> str;
     property icon -> str;
-    required property createdAt -> cal::local_datetime {
-      default := cal::to_local_datetime(datetime_current(), 'UTC');
-    }
-    required property updatedAt -> cal::local_datetime {
-      default := cal::to_local_datetime(datetime_current(), 'UTC');
-    }
     required link user -> User;
 
     # Backlinks, meaning that the data is stored on the target, not here.

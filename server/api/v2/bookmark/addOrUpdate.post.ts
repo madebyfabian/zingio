@@ -38,8 +38,8 @@ export default defineEventHandler(async event => {
 
 			const query = e.update(e.Bookmark, _ => ({
 				set: {
+					updatedAt: e.datetime_current(),
 					// override bookmarkFolder
-					// @ts-ignore
 					bookmarkFolder: bookmarkFolderNew
 						? e.select(e.BookmarkFolder, bookmarkFolder => ({
 								filter_single: e.op(

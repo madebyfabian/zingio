@@ -32,7 +32,7 @@ export default defineEventHandler(async event => {
 				set: {
 					name: body.bookmarkFolder.name,
 					icon: body.bookmarkFolder.icon,
-					/** @todo missing `updatedAt` */
+					updatedAt: e.datetime_current(),
 				},
 			}))
 			return await query.run(edgeDB)

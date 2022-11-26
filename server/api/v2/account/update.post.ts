@@ -31,6 +31,7 @@ export default defineEventHandler(async event => {
 				name: body.account.name,
 				description: body.account.description,
 				handle: body.account.handle,
+				updatedAt: e.datetime_current(),
 			},
 			filter_single: e.op(u.authId, '=', body.account.authId),
 		}))

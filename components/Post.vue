@@ -12,11 +12,19 @@
 		}"
 	>
 		<template v-if="!isDeleted">
-			<UserLink
-				v-if="postState.authorUser"
-				:user="postState.authorUser"
-				asButton
-			/>
+			<div class="flex flex-wrap">
+				<UserLink
+					v-if="postState.authorUser"
+					:user="postState.authorUser"
+					asButton
+				/>
+
+				<span class="mx-2 text-gray-500">·</span>
+
+				<div class="text-gray-500">
+					{{ new Date(_props.post.createdAt as any).toLocaleString() }}
+				</div>
+			</div>
 
 			<p
 				:class="{

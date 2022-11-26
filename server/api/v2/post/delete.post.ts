@@ -24,6 +24,7 @@ export default defineEventHandler(async event => {
 		const query = e.update(e.Post, post => ({
 			set: {
 				isDeleted: true,
+				updatedAt: e.datetime_current(),
 			},
 			filter_single: { id: body.post.id },
 		}))

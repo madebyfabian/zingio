@@ -6,9 +6,9 @@
 			role="link"
 			@click.self="handleElementClick"
 			@keydown.self.enter="handleElementClick"
-			class="reset hover:underline"
+			class="flex gap-1 reset hover:underline"
 		>
-			<span class="font-bold flex gap-1">
+			<span class="font-bold">
 				{{ props.user.name }}
 			</span>
 			<span class="text-gray-500">@{{ props.user.handle }}</span>

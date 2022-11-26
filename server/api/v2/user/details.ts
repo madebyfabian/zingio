@@ -10,7 +10,7 @@ const userDetailsQuery = e.params(
 		e.select(e.User, user => ({
 			...e.User['*'],
 			followingUsers: {
-				'@followingSince': true,
+				'@createdAt': true,
 				...baseUser(user),
 			},
 

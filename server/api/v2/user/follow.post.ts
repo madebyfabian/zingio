@@ -32,6 +32,7 @@ export default defineEventHandler(async event => {
 					followingUsers: {
 						'-=': alreadyFollowingUserQuery,
 					},
+					updatedAt: e.datetime_current(),
 				},
 				filter_single: e.op(currUser.authId, '=', serverAuthUser.id),
 			}))
@@ -46,6 +47,7 @@ export default defineEventHandler(async event => {
 							filter_single: e.op(user.id, '=', e.uuid(body.userId)),
 						})),
 					},
+					updatedAt: e.datetime_current(),
 				},
 				filter_single: e.op(currUser.authId, '=', serverAuthUser.id),
 			}))
