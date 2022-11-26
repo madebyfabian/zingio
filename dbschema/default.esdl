@@ -54,7 +54,9 @@ module default {
     required property updatedAt -> cal::local_datetime {
       default := cal::to_local_datetime(datetime_current(), 'UTC');
     }
-    required link user -> User;
+    required link user -> User {
+      on target delete delete source;
+    };
     link post -> Post {
       on target delete delete source
     };
