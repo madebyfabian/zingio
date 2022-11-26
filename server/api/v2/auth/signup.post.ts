@@ -59,25 +59,4 @@ export default defineEventHandler(async event => {
 			createError({ statusCode: 500, message: 'Failed to create user record.' })
 		)
 	}
-
-	/*
-
-	// Check if the account in database already exists.
-	const user = await xata.db.user.select(['id']).filter({ authId }).getFirst()
-
-	// Then create the user record in the database.
-	const newUserRecord = await xata.db.user.createOrUpdate({
-		id: user?.id ?? '',
-		authId: authId,
-		handle: `user-${authId}`,
-		createdAt: new Date(),
-		updatedAt: new Date(),
-	})
-	if (!newUserRecord)
-		return sendError(
-			event,
-			createError({ statusCode: 500, message: 'Failed to create user record.' })
-		)
-
-	return newUserRecord*/
 })

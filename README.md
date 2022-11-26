@@ -1,10 +1,10 @@
 # zingio App
 
-A Nuxt 3, TailwindCSS, and Supabase Auth, Xata DB Twitter Clone.
+A Nuxt 3, TailwindCSS, Supabase Auth, EdgeDB Twitter Clone.
 
 ## Features
 
-- Authentication
+- Authentication (Password, GitHub)
 - User Profiles
 - Post Lists
 - Creating Posts
