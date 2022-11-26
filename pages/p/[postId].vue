@@ -1,7 +1,8 @@
 <template>
 	<div>
 		<PostList
-			:posts="data?.posts || null"
+			v-if="currentPost"
+			:posts="[currentPost]"
 			type="detail"
 			@openCommentForm="() => (state.isCommentFormOpen = true)"
 			stateKey="postDetailEntryPostList"
@@ -26,6 +27,8 @@
 				/>
 			</div>
 		</section>
+
+		<pre>{{ data }}</pre>
 	</div>
 </template>
 
@@ -40,19 +43,20 @@
 		isCommentFormOpen: false,
 	})
 
-	// Fetch `userDetails`
-	const { data, refresh } = await useFetch('/api/postDetails', {
+	const { data, refresh } = await useFetch('/api/v2/post/details', {
 		headers: useRequestHeaders(['cookie']) as Record<string, any>,
 		params: {
 			postId: route.params.postId,
 		},
 	})
-	if (!data.value) {
+	if (!data.value?.post) {
 		throw createError({ statusCode: 404 })
 	}
 
+	const currentPost = computed(() => data.value?.post || null)
+
 	useHead({
-		title: `@${data.value.posts[0].authorUser?.name}: ${data.value.posts[0].content}`,
+		title: `@${currentPost.value?.authorUser?.name}: ${currentPost.value?.content}`,
 	})
 
 	const handleCommentCreate = async (postState: PostState) => {
@@ -69,7 +73,7 @@
 						},
 						content: postState.content,
 						replyToPost: {
-							id: data.value?.posts[0].id,
+							id: currentPost.value?.id,
 						},
 					},
 				},

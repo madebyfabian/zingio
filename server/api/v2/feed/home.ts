@@ -8,6 +8,7 @@ export const basePost = e.shape(e.Post, post => ({
 	createdAt: true,
 	updatedAt: true,
 	isDeleted: true,
+	replyToPost: true,
 	_count_postReactions: e.count(post.postReactions),
 	_count_postComments: e.count(
 		e.select(e.Post, postComment => ({
