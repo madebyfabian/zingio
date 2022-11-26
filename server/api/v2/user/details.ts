@@ -2,21 +2,34 @@ import { z, useValidatedQuery } from 'h3-zod'
 import { edgeDB } from '@/server/utils/v2/edgeDB'
 import e, { $infer } from '@/dbschema/edgeql-js'
 import { serverSupabaseUser } from '#supabase/server'
+import { baseUser } from './list'
 
 const userDetailsQuery = e.params(
 	{ userHandle: e.str, serverAuthUserId: e.str },
 	$ =>
 		e.select(e.User, user => ({
 			...e.User['*'],
+			followingUsers: {
+				'@followingSince': true,
+				...baseUser(user),
+			},
+
+			_followingUsersCount: e.count(user.followingUsers),
+			_isFollowedByUsersCount: e.count(user.isFollowedByUsers),
+			_postsCount: e.count(user.posts),
 
 			/** @todo make this reusable, currently duplicated! */
 			_currentUserIsFollowing: e.op(
 				'exists',
 				e.select(e.User, userFollowing => ({
 					filter_single: e.op(
-						userFollowing['isFollowedByUsers']['authId'],
-						'=',
-						$.serverAuthUserId
+						e.op(userFollowing.id, '=', user.id),
+						'and',
+						e.op(
+							userFollowing['isFollowedByUsers']['authId'],
+							'=',
+							$.serverAuthUserId
+						)
 					),
 				}))
 			),

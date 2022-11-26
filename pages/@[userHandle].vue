@@ -29,6 +29,24 @@
 			{{ userDetails.description }}
 		</p>
 
+		<ul class="flex gap-8 mt-4">
+			<li>
+				<span class="font-bold">{{
+					userDetails?._isFollowedByUsersCount
+				}}</span>
+				<span class="font-normal"> Followers</span>
+			</li>
+			<li>
+				<span class="font-bold">{{ userDetails?._followingUsersCount }}</span>
+				<span class="font-normal"> Following</span>
+			</li>
+
+			<li>
+				<span class="font-bold">{{ userDetails._postsCount }}</span>
+				<span class="font-normal"> Posts</span>
+			</li>
+		</ul>
+
 		<hr class="my-10" />
 
 		<PostList

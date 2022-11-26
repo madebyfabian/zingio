@@ -12,14 +12,18 @@ const query = e.params({ serverAuthUserId: e.str }, $ =>
 	e.select(e.User, user => ({
 		...baseUser(user),
 
-		/** @todo make this reusable, currently duplicated! */
+		/** @todo make this reusable, currently duplicated! maybe with "computed field" */
 		_currentUserIsFollowing: e.op(
 			'exists',
 			e.select(e.User, userFollowing => ({
 				filter_single: e.op(
-					userFollowing['isFollowedByUsers']['authId'],
-					'=',
-					$.serverAuthUserId
+					e.op(userFollowing.id, '=', user.id),
+					'and',
+					e.op(
+						userFollowing['isFollowedByUsers']['authId'],
+						'=',
+						$.serverAuthUserId
+					)
 				),
 			}))
 		),
