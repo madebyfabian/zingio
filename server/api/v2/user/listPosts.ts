@@ -38,9 +38,13 @@ export default defineEventHandler(async event => {
 			limit: pageSize,
 			offset: body.paginationPage * pageSize,
 			filter: e.op(
-				e.op(post.authorUser.handle, '=', body.userHandle),
+				e.op(
+					e.op(post.authorUser.handle, '=', body.userHandle),
+					'and',
+					e.op(post.isDeleted, '=', false)
+				),
 				'and',
-				e.op(post.isDeleted, '=', false)
+				e.op('not', e.op('exists', post.replyToPost))
 			),
 		}))
 

@@ -50,16 +50,18 @@ const query = e.params({ serverAuthUserId: e.str }, $ =>
 		),
 
 		// ---
-		/*limit: 10,
-		offset: 0,*/
 		filter: e.op(
 			e.op(
-				post['authorUser']['isFollowedByUsers']['authId'],
-				'=',
-				$.serverAuthUserId
+				e.op(
+					post['authorUser']['isFollowedByUsers']['authId'],
+					'=',
+					$.serverAuthUserId
+				),
+				'and',
+				e.op(post.isDeleted, '=', false)
 			),
 			'and',
-			e.op(post.isDeleted, '=', false)
+			e.op('not', e.op('exists', post.replyToPost))
 		),
 	}))
 )
