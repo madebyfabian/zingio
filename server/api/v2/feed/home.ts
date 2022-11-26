@@ -9,7 +9,7 @@ export const basePost = e.shape(e.Post, post => ({
 	updatedAt: true,
 	isDeleted: true,
 	replyToPost: true,
-	_count_postReactions: e.count(post.postReactions),
+	_count_postReactions: e.count(post.allPostReactions),
 	_count_postComments: e.count(
 		e.select(e.Post, postComment => ({
 			filter: e.op(postComment.id, '=', post.replyToPost.id),
@@ -43,7 +43,7 @@ const query = e.params({ serverAuthUserId: e.str }, $ =>
 			'exists',
 			e.select(e.PostReaction, postReaction => ({
 				filter: e.op(
-					e.op(postReaction.id, 'in', post.postReactions.id),
+					e.op(postReaction.post.id, '=', post.id),
 					'and',
 					e.op(postReaction.user.authId, '=', $.serverAuthUserId)
 				),

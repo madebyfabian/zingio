@@ -143,13 +143,12 @@
 		postState.value._currentUserPostReaction = newState
 		postState.value._count_postReactions += newState ? 1 : -1
 
-		const { data, error } = await useFetch('/api/currentUserPostLike', {
+		const { data, error } = await useFetch('/api/v2/post/like', {
 			method: 'POST',
 			headers: useRequestHeaders(['cookie']) as Record<string, any>,
 			body: {
 				postId: postState.value.id,
 				user: {
-					id: currentUser.value?.id,
 					authId: authUser.value?.id,
 				},
 			},

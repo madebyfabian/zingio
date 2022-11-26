@@ -42,10 +42,9 @@ module default {
     }
     link replyToPost -> Post;
     required link authorUser -> User;
-    multi link postReactions -> PostReaction {
-      on source delete delete target;
-      constraint exclusive;
-    };
+
+    # Backlinks, meaning that the data is stored on the target, not here.
+    multi link allPostReactions := .<post[is PostReaction];
   }
 
   type PostReaction {
@@ -56,6 +55,11 @@ module default {
       default := cal::to_local_datetime(datetime_current(), 'UTC');
     }
     required link user -> User;
+    link post -> Post {
+      on target delete delete source
+    };
+
+    constraint exclusive on ((.user, .post));
   }
 
   type Bookmark {

@@ -25,7 +25,7 @@ export default defineEventHandler(async event => {
 					'exists',
 					e.select(e.PostReaction, postReaction => ({
 						filter: e.op(
-							e.op(postReaction.id, 'in', post.postReactions.id),
+							e.op(postReaction.post.id, '=', post.id),
 							'and',
 							e.op(postReaction.user.authId, '=', serverAuthUser.id)
 						),
@@ -45,7 +45,7 @@ export default defineEventHandler(async event => {
 				'exists',
 				e.select(e.PostReaction, postReaction => ({
 					filter: e.op(
-						e.op(postReaction.id, 'in', post.postReactions.id),
+						e.op(postReaction.post.id, '=', post.id),
 						'and',
 						e.op(postReaction.user.authId, '=', serverAuthUser.id)
 					),
