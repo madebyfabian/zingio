@@ -76,7 +76,7 @@
 				},
 			}
 		)
-		if (newPostError.value || !newPost.value) return console.error(newPostError)
+		if (newPostError.value || !newPost.value) return newPostError.value
 
 		refresh()
 		state.isCommentFormOpen = false

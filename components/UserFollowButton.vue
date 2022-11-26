@@ -28,6 +28,6 @@
 				userId: props.user.id,
 			},
 		})
-		if (error.value || !data.value) return console.error(error)
+		if (error.value || !data.value) return console.error(error.value)
 	}
 </script>

@@ -154,7 +154,7 @@
 				},
 			},
 		})
-		if (error.value || !data.value) return console.error(error)
+		if (error.value || !data.value) return console.error(error.value)
 	}
 
 	const handleDeletePost = async () => {
@@ -171,7 +171,7 @@
 				},
 			},
 		})
-		if (error.value || !data.value) return console.error(error)
+		if (error.value || !data.value) return console.error(error.value)
 
 		return emit('postDeleted', postState.value.id)
 	}
