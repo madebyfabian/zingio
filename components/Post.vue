@@ -157,13 +157,12 @@
 	}
 
 	const handleDeletePost = async () => {
-		const { data, error } = await useFetch('/api/postDelete', {
+		const { data, error } = await useFetch('/api/v2/post/delete', {
 			method: 'POST',
 			headers: useRequestHeaders(['cookie']) as Record<string, any>,
 			body: {
 				post: {
 					authorUser: {
-						id: currentUser.value?.id,
 						authId: authUser.value?.id,
 					},
 					id: postState.value.id,

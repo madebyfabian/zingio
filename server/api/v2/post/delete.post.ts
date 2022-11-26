@@ -1,6 +1,7 @@
 import { z, useValidatedBody } from 'h3-zod'
 import { serverSupabaseUser } from '#supabase/server'
-import { xata } from '@/server/lib/xata'
+import { edgeDB } from '@/server/utils/v2/edgeDB'
+import e from '@/dbschema/edgeql-js'
 
 export default defineEventHandler(async event => {
 	const body = await useValidatedBody(
@@ -8,7 +9,6 @@ export default defineEventHandler(async event => {
 		z.object({
 			post: z.object({
 				authorUser: z.object({
-					id: z.string(),
 					authId: z.string(),
 				}),
 				id: z.string(),
@@ -20,15 +20,17 @@ export default defineEventHandler(async event => {
 	if (serverAuthUser.id !== body.post.authorUser.authId)
 		return sendError(event, createError({ statusCode: 403 }))
 
-	const updatedRecord = await xata.db.post.update({
-		id: body.post.id,
-		isDeleted: true,
-		updatedAt: new Date(),
-	})
-	if (!updatedRecord) return sendError(event, createError({ statusCode: 500 }))
+	try {
+		const query = e.update(e.Post, post => ({
+			set: {
+				isDeleted: true,
+			},
+			filter_single: { id: body.post.id },
+		}))
 
-	/** @TODO delete likes */
-	/** @TODO set counter for countTotalComments and countTotalLikes -1 */
-
-	return updatedRecord
+		return await query.run(edgeDB)
+	} catch (error) {
+		console.error(error)
+		return sendError(event, createError({ statusCode: 410 }))
+	}
 })
