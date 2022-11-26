@@ -11,7 +11,7 @@
 		"generate-types:edgedb": "npx @edgedb/generate edgeql-js",
 		"edgedb-migration:create": "edgedb migration create",
 		"edgedb-migration:apply": "edgedb migrate",
-		"prebuild": "npx @edgedb/generate edgeql-js"
+		"prebuild": "npx @edgedb/generate edgeql-js --target cjs"
 	},
 	"devDependencies": {
 		"@edgedb/generate": "^0.0.6",
