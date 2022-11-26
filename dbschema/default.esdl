@@ -9,7 +9,7 @@ module default {
     }
     property description -> str;
     multi link followingUsers extending has::createdAndUpdatedAt -> User {
-      on target delete allow
+      on target delete allow;
     };
 
     # Backlinks, meaning that the data is stored on the target, not here.
@@ -27,7 +27,7 @@ module default {
       default := false;
     }
     link replyToPost -> Post {
-      on target delete allow
+      on target delete allow;
     };
     required link authorUser -> User;
 
@@ -49,7 +49,9 @@ module default {
 
   type Bookmark extending has::CreatedAndUpdatedAt {
     required link user -> User;
-    required link post -> Post;
+    required link post -> Post {
+      on target delete delete source;
+    };
     link bookmarkFolder -> BookmarkFolder;
   }
 
