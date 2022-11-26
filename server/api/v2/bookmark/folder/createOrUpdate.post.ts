@@ -35,9 +35,7 @@ export default defineEventHandler(async event => {
 					/** @todo missing `updatedAt` */
 				},
 			}))
-			const result = await query.run(edgeDB)
-			if (!result) return sendError(event, createError({ statusCode: 410 }))
-			return result
+			return await query.run(edgeDB)
 		} else {
 			// Create new
 			const query = e.insert(e.BookmarkFolder, {
@@ -49,12 +47,10 @@ export default defineEventHandler(async event => {
 				name: body.bookmarkFolder.name,
 				icon: body.bookmarkFolder.icon,
 			})
-			const result = await query.run(edgeDB)
-			if (!result) return sendError(event, createError({ statusCode: 410 }))
-			return result
+			return await query.run(edgeDB)
 		}
 	} catch (error) {
 		console.error(error)
-		return sendError(event, createError({ statusCode: 500 }))
+		return sendError(event, createError({ statusCode: 410 }))
 	}
 })

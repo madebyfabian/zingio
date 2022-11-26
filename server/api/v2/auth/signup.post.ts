@@ -51,10 +51,7 @@ export default defineEventHandler(async event => {
 
 	// Then add the user record to the database.
 	try {
-		const newUser = await newUserQuery.run(edgeDB, { authId })
-		if (!newUser) throw new Error('Failed to create user record.')
-
-		return newUser
+		return await newUserQuery.run(edgeDB, { authId })
 	} catch (error) {
 		console.error(error)
 		return sendError(

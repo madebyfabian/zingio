@@ -25,12 +25,9 @@ export default defineEventHandler(async event => {
 			filter_single: { id: body.bookmarkFolder.id },
 		}))
 
-		const deletedRecord = await query.run(edgeDB)
-		if (!deletedRecord)
-			return sendError(event, createError({ statusCode: 410 }))
-		return deletedRecord
+		return await query.run(edgeDB)
 	} catch (error) {
 		console.error(error)
-		return sendError(event, createError({ statusCode: 500 }))
+		return sendError(event, createError({ statusCode: 410 }))
 	}
 })
