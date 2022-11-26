@@ -31,7 +31,6 @@ export default defineEventHandler(async event => {
 		})
 
 		const result = await query.run(edgeDB)
-		console.log({ result })
 
 		return result
 	} catch (error) {
