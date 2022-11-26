@@ -57,7 +57,7 @@
 
 	const handleCommentCreate = async (postState: PostState) => {
 		const { data: newPost, error: newPostError } = await useFetch(
-			'/api/currentUserCreatePost',
+			'/api/v2/post/create',
 			{
 				method: 'POST',
 				// @ts-expect-error - this is a valid option
@@ -65,18 +65,18 @@
 				body: {
 					post: {
 						authorUser: {
-							id: currentUser.value?.id,
 							authId: currentUser.value?.authId,
 						},
 						content: postState.content,
-						isCommentOf: {
+						replyToPost: {
 							id: data.value?.posts[0].id,
 						},
 					},
 				},
 			}
 		)
-		if (newPostError.value || !newPost.value) return newPostError.value
+		if (newPostError.value || !newPost.value)
+			return console.error(newPostError.value)
 
 		refresh()
 		state.isCommentFormOpen = false
