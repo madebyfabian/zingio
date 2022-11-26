@@ -39,10 +39,12 @@ export default defineEventHandler(async event => {
 		} else {
 			// Create new
 			const query = e.insert(e.BookmarkFolder, {
-				/** @todo better typing */
-				// @ts-ignore
 				user: e.select(e.User, user => ({
-					filter_single: { authId: body.bookmarkFolder.user.authId },
+					filter_single: e.op(
+						user.authId,
+						'=',
+						body.bookmarkFolder.user.authId
+					),
 				})),
 				name: body.bookmarkFolder.name,
 				icon: body.bookmarkFolder.icon,
