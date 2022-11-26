@@ -33,6 +33,7 @@ module default {
 
     # Backlinks, meaning that the data is stored on the target, not here.
     multi link allPostReactions := .<post[is PostReaction];
+    multi link allPostReplies := .<replyToPost[is Post];
   }
 
   type PostReaction extending has::CreatedAndUpdatedAt {

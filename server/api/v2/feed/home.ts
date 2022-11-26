@@ -11,11 +11,7 @@ export const basePost = e.shape(e.Post, post => ({
 	isDeleted: true,
 	replyToPost: true,
 	_count_postReactions: e.count(post.allPostReactions),
-	_count_postComments: e.count(
-		e.select(e.Post, postComment => ({
-			filter: e.op(postComment.id, '=', post.replyToPost.id),
-		}))
-	),
+	_count_postComments: e.count(post.allPostReplies),
 	authorUser: authorUser => ({
 		...baseUser(authorUser),
 	}),
