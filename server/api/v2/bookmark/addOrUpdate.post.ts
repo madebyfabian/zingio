@@ -42,7 +42,6 @@ export default defineEventHandler(async event => {
 					// @ts-ignore
 					bookmarkFolder: bookmarkFolderNew
 						? e.select(e.BookmarkFolder, bookmarkFolder => ({
-								...e.BookmarkFolder['*'],
 								filter_single: e.op(
 									e.op(bookmarkFolder.id, '=', e.uuid(bookmarkFolderNew.id)),
 									'and',
