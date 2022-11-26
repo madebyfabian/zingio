@@ -38,18 +38,21 @@
 			stateKey="userDetailPagePostList"
 		/>
 
-		<button v-if="userPostsMeta?.page?.more" @click="loadUserPosts">
+		<button v-if="userPostsPagination.nextPage" @click="() => loadUserPosts()">
 			Load more
 		</button>
 	</div>
 </template>
 
 <script setup lang="ts">
+	import type { BasePost } from '@/server/api/v2/feed/home'
+	import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
+	const currentUserStore = useCurrentUserStore()
+	const currentUser = computed(() => currentUserStore.currentUser)
 	const route = useRoute()
-	const authUser = useSupabaseUser()
 
 	// Fetch `userDetails`
-	const { data: userDetails } = await useFetch('/api/userDetails', {
+	const { data: userDetails } = await useFetch('/api/v2/user/details', {
 		headers: useRequestHeaders(['cookie']) as Record<string, any>,
 		params: { userHandle: route.params.userHandle },
 	})
@@ -57,7 +60,7 @@
 		throw createError({ statusCode: 404, message: 'User not found' })
 
 	const isCurrentUser = computed(() => {
-		return authUser.value?.id === userDetails.value?.authId
+		return currentUser.value?.id === userDetails.value?.id
 	})
 
 	useHead({
@@ -68,33 +71,50 @@
 		`userPostsPending:${userDetails.value.id}`,
 		() => true
 	)
-	const userPosts = useState(`userPosts:${userDetails.value.id}`, () => [])
-	const userPostsMeta = useState<{
-		page?: { more: boolean; cursor: string }
-	}>(`userPosts:${userDetails.value.id}:meta`, () => ({
-		page: undefined,
-	}))
+	const userPosts = useState<BasePost[]>(
+		`userPosts:${userDetails.value.id}`,
+		() => []
+	)
+	const userPostsPagination = useState(
+		`userPostsPagination:${userDetails.value.id}`,
+		() => ({
+			page: 0,
+			nextPage: 0 as null | number,
+			prevPage: null as null | number,
+		})
+	)
 
 	onMounted(() => {
-		loadUserPosts()
+		loadUserPosts({ init: true })
 	})
 
 	// Fetch `userPosts`
-	const loadUserPosts = async () => {
-		const paginationCursor = userPostsMeta.value.page?.cursor
-
+	const loadUserPosts = async (options?: { init: boolean }) => {
 		try {
-			const res = await $fetch('/api/userPosts', {
+			if (options?.init) {
+				Object.assign(userPostsPagination.value, {
+					page: 0,
+					nextPage: 0,
+					prevPage: null,
+				})
+			}
+
+			const res = await $fetch('/api/v2/user/listPosts', {
 				headers: useRequestHeaders(['cookie']) as Record<string, any>,
 				params: {
 					userHandle: route.params.userHandle,
-					paginationCursor: paginationCursor ?? undefined,
+					paginationPage: userPostsPagination.value.nextPage ?? 0,
 				},
 			})
 			if (!res) throw createError({ statusCode: 500 })
 
-			userPosts.value = [...userPosts.value, ...(res.records as never[])]
-			userPostsMeta.value = res.meta
+			// Update `userPosts`
+			userPosts.value = options?.init
+				? res.posts
+				: [...userPosts.value, ...res.posts]
+
+			// Update `userPostsPagination`
+			Object.assign(userPostsPagination.value, res.pagination)
 		} catch (error) {
 			console.error(error)
 		} finally {

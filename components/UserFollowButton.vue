@@ -8,18 +8,17 @@
 </template>
 
 <script setup lang="ts">
-	import type { User } from '@/server/lib/xata/gen/client.gen'
-	import { UserExtension } from '@/types'
+	import type { UserDetail } from '@/server/api/v2/user/details'
+	import type { UserListItemExtended } from '@/server/api/v2/user/list'
 
 	const props = defineProps<{
-		user: User & UserExtension
+		user: NonNullable<UserDetail | UserListItemExtended>
 	}>()
 
-	const isFollowing = computed(() => props.user?.currentUser?.isFollowing)
+	const isFollowing = computed(() => props.user._currentUserIsFollowing)
 
 	const handleFollowToggle = async () => {
-		if (typeof props?.user?.currentUser?.isFollowing === 'boolean')
-			props.user.currentUser.isFollowing = !isFollowing.value
+		props.user._currentUserIsFollowing = !isFollowing.value
 
 		const { data, error } = await useFetch('/api/currentUserIsFollowingUser', {
 			method: 'POST',

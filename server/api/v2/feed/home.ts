@@ -1,6 +1,7 @@
 import { edgeDB } from '@/server/utils/v2/edgeDB'
 import e, { $infer } from '@/dbschema/edgeql-js'
 import { serverSupabaseUser } from '#supabase/server'
+import { baseUser } from '../user/list'
 
 export const basePost = e.shape(e.Post, post => ({
 	id: true,
@@ -15,11 +16,9 @@ export const basePost = e.shape(e.Post, post => ({
 			filter: e.op(postComment.id, '=', post.replyToPost.id),
 		}))
 	),
-	authorUser: {
-		id: true,
-		name: true,
-		handle: true,
-	},
+	authorUser: authorUser => ({
+		...baseUser(authorUser),
+	}),
 
 	// ---
 	order_by: post.createdAt,
@@ -54,9 +53,13 @@ const query = e.params({ serverAuthUserId: e.str }, $ =>
 		/*limit: 10,
 		offset: 0,*/
 		filter: e.op(
-			post['authorUser']['isFollowedByUsers']['authId'],
-			'=',
-			$.serverAuthUserId
+			e.op(
+				post['authorUser']['isFollowedByUsers']['authId'],
+				'=',
+				$.serverAuthUserId
+			),
+			'and',
+			e.op(post.isDeleted, '=', false)
 		),
 	}))
 )
