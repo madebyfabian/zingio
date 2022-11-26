@@ -16,11 +16,35 @@ A Nuxt 3, TailwindCSS, Supabase Auth, EdgeDB Twitter Clone.
 
 ## Setup
 
-### Installing EdgeDB
+### Installing EdgeDB CLI & TypeScript Types
 
 - Install EdgeDB CLI locally
 - after that, run `edgedb project init`
 - then `npm run generate-types:edgedb`
+
+### Deploy EdgeDB
+
+- See https://www.edgedb.com/docs/guides/deployment/digitalocean
+- Create `digitalocean` Link in CLI (`<dsn>` is the `edgedb://...` connection string)
+  ```bash
+  edgedb instance link \
+  	--dsn <dsn> \
+  	--trust-tls-cert \
+  	--non-interactive \
+  	digitalocean
+  ```
+- Run migrations
+  ```bash
+  edgedb migrate --dsn <dsn> --tls-security insecure
+  ```
+
+#### Connect to edgeDB
+
+This is not required, but to test the connection, you can run
+
+```bash
+edgedb -I digitalocean
+```
 
 ### Add .env
 
@@ -28,6 +52,10 @@ A Nuxt 3, TailwindCSS, Supabase Auth, EdgeDB Twitter Clone.
 # Supabase
 SUPABASE_URL="https://example.supabase.com"
 SUPABASE_KEY="<your_key>"
+
+# EdgeDB
+EDGEDB_DSN="<your_dsn>"
+EDGEDB_CLIENT_TLS_SECURITY=insecure
 ```
 
 ### Install dependencies

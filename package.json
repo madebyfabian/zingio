@@ -10,7 +10,8 @@
 		"edgedb-migrate": "npm run edgedb-migration:create && npm run edgedb-migration:apply && npm run generate-types:edgedb",
 		"generate-types:edgedb": "npx @edgedb/generate edgeql-js",
 		"edgedb-migration:create": "edgedb migration create",
-		"edgedb-migration:apply": "edgedb migrate"
+		"edgedb-migration:apply": "edgedb migrate",
+		"prebuild": "npx edgeql-js"
 	},
 	"devDependencies": {
 		"@edgedb/generate": "^0.0.6",
