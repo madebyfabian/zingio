@@ -6,9 +6,8 @@ export const useCurrentUserStore = defineStore('useCurrentUser', () => {
 			const authUser = useSupabaseUser()
 			if (!authUser.value) return
 
-			const currentUserRes = await $fetch('/api/currentUser', {
-				// @ts-expect-error - this is a valid option
-				headers: useRequestHeaders(['cookie']),
+			const currentUserRes = await $fetch('/api/v2/account/details', {
+				headers: useRequestHeaders(['cookie']) as Record<string, any>,
 			})
 			currentUser.value = currentUserRes
 			return currentUserRes

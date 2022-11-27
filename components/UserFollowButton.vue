@@ -1,5 +1,6 @@
 <template>
 	<button
+		v-if="!isCurrentUser"
 		:data-type="isFollowing ? 'secondary' : 'primary'"
 		@click="handleFollowToggle"
 	>
@@ -8,27 +9,32 @@
 </template>
 
 <script setup lang="ts">
-	import type { User } from '@/server/lib/xata/gen/client.gen'
-	import { UserExtension } from '@/types'
+	import type { UserDetail } from '@/server/api/v2/user/details'
+	import type { UserListItemExtended } from '@/server/api/v2/user/list'
+	import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
+	const currentUserStore = useCurrentUserStore()
+	const currentUser = computed(() => currentUserStore.currentUser)
 
 	const props = defineProps<{
-		user: User & UserExtension
+		user: NonNullable<UserDetail | UserListItemExtended>
 	}>()
 
-	const isFollowing = computed(() => props.user?.currentUser?.isFollowing)
+	const isFollowing = computed(() => props.user._currentUserIsFollowing)
+
+	const isCurrentUser = computed(() => {
+		return currentUser.value?.id === props.user.id
+	})
 
 	const handleFollowToggle = async () => {
-		if (typeof props?.user?.currentUser?.isFollowing === 'boolean')
-			props.user.currentUser.isFollowing = !isFollowing.value
+		props.user._currentUserIsFollowing = !isFollowing.value
 
-		const { data, error } = await useFetch('/api/currentUserIsFollowingUser', {
+		const { data, error } = await useFetch('/api/v2/user/follow', {
 			method: 'POST',
-			// @ts-expect-error - this is a valid option
-			headers: useRequestHeaders(['cookie']),
+			headers: useRequestHeaders(['cookie']) as Record<string, any>,
 			body: {
 				userId: props.user.id,
 			},
 		})
-		if (error.value || !data.value) return console.error(error)
+		if (error.value || !data.value) return console.error(error.value)
 	}
 </script>

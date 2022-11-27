@@ -1,7 +1,8 @@
 <template>
 	<div>
 		<PostList
-			:posts="data?.posts || null"
+			v-if="currentPost"
+			:posts="[currentPost]"
 			type="detail"
 			@openCommentForm="() => (state.isCommentFormOpen = true)"
 			stateKey="postDetailEntryPostList"
@@ -40,25 +41,25 @@
 		isCommentFormOpen: false,
 	})
 
-	// Fetch `userDetails`
-	const { data, refresh } = await useFetch('/api/postDetails', {
-		// @ts-expect-error - this is a valid option
-		headers: useRequestHeaders(['cookie']),
+	const { data, refresh } = await useFetch('/api/v2/post/details', {
+		headers: useRequestHeaders(['cookie']) as Record<string, any>,
 		params: {
 			postId: route.params.postId,
 		},
 	})
-	if (!data.value) {
+	if (!data.value?.post) {
 		throw createError({ statusCode: 404 })
 	}
 
+	const currentPost = computed(() => data.value?.post || null)
+
 	useHead({
-		title: `@${data.value.posts[0].authorUser?.name}: ${data.value.posts[0].content}`,
+		title: `@${currentPost.value?.authorUser?.name}: ${currentPost.value?.content}`,
 	})
 
 	const handleCommentCreate = async (postState: PostState) => {
 		const { data: newPost, error: newPostError } = await useFetch(
-			'/api/currentUserCreatePost',
+			'/api/v2/post/create',
 			{
 				method: 'POST',
 				// @ts-expect-error - this is a valid option
@@ -66,18 +67,18 @@
 				body: {
 					post: {
 						authorUser: {
-							id: currentUser.value?.id,
 							authId: currentUser.value?.authId,
 						},
 						content: postState.content,
-						isCommentOf: {
-							id: data.value?.posts[0].id,
+						replyToPost: {
+							id: currentPost.value?.id,
 						},
 					},
 				},
 			}
 		)
-		if (newPostError.value || !newPost.value) return console.error(newPostError)
+		if (newPostError.value || !newPost.value)
+			return console.error(newPostError.value)
 
 		refresh()
 		state.isCommentFormOpen = false

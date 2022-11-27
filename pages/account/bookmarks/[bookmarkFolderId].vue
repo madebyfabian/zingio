@@ -8,13 +8,13 @@
 				&larr; Back
 			</button>
 			<h1>
-				{{ postBookmarkList?.bookmarkFolder?.icon }}
-				{{ postBookmarkList?.bookmarkFolder?.name }}
+				{{ bookmarkFolderDetails?.icon }}
+				{{ bookmarkFolderDetails?.name }}
 			</h1>
 		</div>
 
 		<PostList
-			:posts="postBookmarkList?.posts || null"
+			:posts="postList"
 			type="feed"
 			variant="bookmarks"
 			stateKey="accountBookmarksFolderPagePostList"
@@ -24,21 +24,38 @@
 
 <script setup lang="ts">
 	const route = useRoute()
+	const authUser = useSupabaseUser()
 
 	definePageMeta({
 		middleware: 'auth',
 	})
 
-	const { data: postBookmarkList, pending: postBookmarkListPending } =
-		await useFetch('/api/postBookmarkList', {
-			// @ts-expect-error - this is a valid option
-			headers: useRequestHeaders(['cookie']),
-			params: { bookmarkFolderId: route.params.bookmarkFolderId },
-		})
-	if (!postBookmarkList.value)
+	const { data: bookmarkFolderDetails } = await useFetch(
+		'/api/v2/bookmark/folder/details',
+		{
+			headers: useRequestHeaders(['cookie']) as Record<string, any>,
+			params: {
+				bookmarkFolderId:
+					route.params.bookmarkFolderId === 'unsorted'
+						? null
+						: route.params.bookmarkFolderId,
+				bookmarkFolderUnsorted: route.params.bookmarkFolderId === 'unsorted',
+				bookmarkFolderUserAuthId: authUser.value?.id,
+			},
+		}
+	)
+	if (!bookmarkFolderDetails.value)
 		throw createError({ statusCode: 404, message: 'Data not found' })
 
 	useHead({
-		title: `Bookmarks: ${postBookmarkList.value?.bookmarkFolder?.name}`,
+		title: `Bookmarks: ${bookmarkFolderDetails.value?.name}`,
+	})
+
+	const postList = computed(() => {
+		return (
+			bookmarkFolderDetails.value?.hasBookmarks.map(
+				bookmark => bookmark.post
+			) || null
+		)
 	})
 </script>

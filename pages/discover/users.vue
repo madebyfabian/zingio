@@ -15,19 +15,12 @@
 	</div>
 </template>
 
-<script lang="ts">
-	export default defineComponent({
-		async setup() {
-			useHead({
-				title: `Discover People`,
-			})
+<script lang="ts" setup>
+	useHead({
+		title: `Discover People`,
+	})
 
-			const { data: userDetailsList } = await useFetch('/api/userDetailsList', {
-				// @ts-expect-error - this is a valid option
-				headers: useRequestHeaders(['cookie']),
-			})
-
-			return { userDetailsList }
-		},
+	const { data: userDetailsList } = await useFetch('/api/v2/user/list', {
+		headers: useRequestHeaders(['cookie']) as Record<string, any>,
 	})
 </script>

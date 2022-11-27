@@ -2,6 +2,13 @@
 export default defineNuxtConfig({
 	typescript: {
 		shim: false,
+		strict: true,
+		tsConfig: {
+			compilerOptions: {
+				noUnusedLocals: false,
+				downlevelIteration: true,
+			},
+		},
 	},
 
 	modules: ['@nuxtjs/tailwindcss', '@nuxtjs/supabase', '@pinia/nuxt'],

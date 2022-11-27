@@ -96,15 +96,18 @@
 	const handleSubmit = async () => {
 		state.status = null
 
-		const { data: newUserRecord, error } = await useFetch('/api/auth/signup', {
-			method: 'POST',
-			body: {
-				user: {
-					email: state.email,
-					password: state.password,
+		const { data: newUserRecord, error } = await useFetch(
+			'/api/v2/auth/signup',
+			{
+				method: 'POST',
+				body: {
+					user: {
+						email: state.email,
+						password: state.password,
+					},
 				},
-			},
-		})
+			}
+		)
 		if (newUserRecord.value && !error.value) {
 			state.status = 'success'
 		} else {

@@ -12,11 +12,19 @@
 		}"
 	>
 		<template v-if="!isDeleted">
-			<UserLink
-				v-if="postState.authorUser"
-				:user="postState.authorUser"
-				asButton
-			/>
+			<div class="flex flex-wrap">
+				<UserLink
+					v-if="postState.authorUser"
+					:user="postState.authorUser"
+					asButton
+				/>
+
+				<span class="mx-2 text-gray-500">·</span>
+
+				<div class="text-gray-500">
+					{{ new Date(_props.post.createdAt as any).toLocaleString() }}
+				</div>
+			</div>
 
 			<p
 				:class="{
@@ -35,7 +43,7 @@
 						class="gap-1"
 					>
 						👍 Like —
-						<span class="font-bold">{{ postState.countTotalLikes }}</span>
+						<span class="font-bold">{{ postState._count_postReactions }}</span>
 					</button>
 
 					<button
@@ -44,21 +52,21 @@
 						class="gap-1"
 					>
 						💬 Comment —
-						<span>{{ postState.countTotalComments }}</span>
+						<span>{{ postState._count_postComments }}</span>
 					</button>
 
 					<button
 						data-type="secondary"
-						@click.stop="state.postBookmarkDialogOpen = true"
+						@click.stop="state.bookmarkDialogOpen = true"
 					>
 						🔖 Bookmark
 					</button>
 					<UIDialog
-						:isOpen="state.postBookmarkDialogOpen"
-						@close="state.postBookmarkDialogOpen = false"
+						:isOpen="state.bookmarkDialogOpen"
+						@close="state.bookmarkDialogOpen = false"
 					>
 						<PostBookmarkDialogForm
-							v-if="state.postBookmarkDialogOpen"
+							v-if="state.bookmarkDialogOpen"
 							:postId="postState.id"
 							@afterSubmit="handleAfterPostBookmarkSubmit"
 						/>
@@ -67,7 +75,7 @@
 
 				<div class="flex gap-3 items-center">
 					<button
-						v-if="authUser?.id === postState.authorUser?.authId"
+						v-if="currentUser?.id === postState.authorUser?.id"
 						@click.stop="handleDeletePost"
 						data-type="secondary"
 						class="gap-1"
@@ -84,39 +92,33 @@
 
 <script lang="ts">
 	export type PostProps = {
-		post: SelectedPick<PostRecord, ('*' | 'authorUser.*')[]> & PostExtension
+		post: BasePost
 		type: 'detail' | 'feed'
 	}
 </script>
 
 <script setup lang="ts">
 	import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
-	import type { SelectedPick } from '@xata.io/client'
-	import type { PostRecord } from '@/server/lib/xata/gen/client.gen'
-	import type { PostExtension } from '@/types'
 	import type { EmitReturnAction } from '@/components/PostBookmarkDialogForm.vue'
+	import type { BasePost } from '@/server/api/v2/feed/home'
 	const currentUserStore = useCurrentUserStore()
 	const currentUser = computed(() => currentUserStore.currentUser)
 	const router = useRouter()
 	const authUser = useSupabaseUser()
 
 	const _props = defineProps<{
-		post: SelectedPick<PostRecord, ('*' | 'authorUser.*')[]> & PostExtension
-		type: 'detail' | 'feed'
+		post: PostProps['post']
+		type: PostProps['type']
 	}>()
 
 	const emit = defineEmits<{
 		(e: 'postDeleted', postId: string): void
-		(
-			e: 'postBookmarkChanged',
-			postId: string,
-			returnAction: EmitReturnAction
-		): void
+		(e: 'bookmarkChanged', postId: string, returnAction: EmitReturnAction): void
 		(e: 'openCommentForm'): void
 	}>()
 
 	const state = reactive({
-		postBookmarkDialogOpen: false,
+		bookmarkDialogOpen: false,
 	})
 
 	const postState = useState<typeof _props.post>(
@@ -134,7 +136,7 @@
 	const isDeleted = computed(() => Boolean(postState.value.isDeleted))
 	const isLink = computed(() => _props.type === 'feed')
 	const isLikedByCurrUser = computed(
-		() => postState.value?.currentUser?.hasLiked
+		() => postState.value._currentUserPostReaction
 	)
 
 	const handleElementClick = (e: Event) => {
@@ -146,47 +148,42 @@
 
 	const handlePostLike = async () => {
 		const newState = !isLikedByCurrUser.value
-		if (typeof postState.value?.currentUser?.hasLiked === 'boolean')
-			postState.value.currentUser.hasLiked = newState
-		postState.value.countTotalLikes += newState ? 1 : -1
+		postState.value._currentUserPostReaction = newState
+		postState.value._count_postReactions += newState ? 1 : -1
 
-		const { data, error } = await useFetch('/api/currentUserPostLike', {
+		const { data, error } = await useFetch('/api/v2/post/like', {
 			method: 'POST',
-			// @ts-expect-error - this is a valid option
-			headers: useRequestHeaders(['cookie']),
+			headers: useRequestHeaders(['cookie']) as Record<string, any>,
 			body: {
 				postId: postState.value.id,
 				user: {
-					id: currentUser.value?.id,
 					authId: authUser.value?.id,
 				},
 			},
 		})
-		if (error.value || !data.value) return console.error(error)
+		if (error.value || !data.value) return console.error(error.value)
 	}
 
 	const handleDeletePost = async () => {
-		const { data, error } = await useFetch('/api/postDelete', {
+		const { data, error } = await useFetch('/api/v2/post/delete', {
 			method: 'POST',
-			// @ts-expect-error - this is a valid option
-			headers: useRequestHeaders(['cookie']),
+			headers: useRequestHeaders(['cookie']) as Record<string, any>,
 			body: {
 				post: {
 					authorUser: {
-						id: currentUser.value?.id,
 						authId: authUser.value?.id,
 					},
 					id: postState.value.id,
 				},
 			},
 		})
-		if (error.value || !data.value) return console.error(error)
+		if (error.value || !data.value) return console.error(error.value)
 
 		return emit('postDeleted', postState.value.id)
 	}
 
 	const handleAfterPostBookmarkSubmit = (returnAction: EmitReturnAction) => {
-		state.postBookmarkDialogOpen = false
-		emit('postBookmarkChanged', postState.value.id, returnAction)
+		state.bookmarkDialogOpen = false
+		emit('bookmarkChanged', postState.value.id, returnAction)
 	}
 </script>

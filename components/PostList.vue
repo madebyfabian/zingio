@@ -7,7 +7,7 @@
 				:post="post"
 				:type="_props.type"
 				@postDeleted="handlePostDeleted"
-				@postBookmarkChanged="handlePostBookmarkChanged"
+				@bookmarkChanged="handlePostBookmarkChanged"
 				@openCommentForm="handleOpenCommentForm"
 			/>
 		</div>
@@ -40,7 +40,10 @@
 		if (route.query.openCommentForm === 'true') emit('openCommentForm')
 	})
 
-	const hiddenPostIds = useState<string[]>('hiddenPostIds', () => [])
+	const hiddenPostIds = useState<string[]>(
+		`hiddenPostIds:${_props.stateKey}`,
+		() => []
+	)
 	const _posts = useState(_props.stateKey, () => _props.posts)
 	watchEffect(() => {
 		_posts.value = _props.posts
@@ -79,7 +82,7 @@
 	) => {
 		switch (returnAction) {
 			case 'deleted':
-				addToHiddenPostIds(postId)
+				_props.variant === 'bookmarks' && addToHiddenPostIds(postId)
 				break
 
 			case 'updated':

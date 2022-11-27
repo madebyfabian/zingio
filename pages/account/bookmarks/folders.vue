@@ -10,7 +10,7 @@
 			v-if="Array.isArray(bookmarkFolders)"
 		>
 			<BookmarkFolderItem
-				:bookmarkFolder="{ name: 'Unsorted', icon: '📬', id: 'unsorted' }"
+				:bookmarkFolder="({ name: 'Unsorted', icon: '💬', id: 'unsorted' } as any)"
 				isReadOnly
 			/>
 
@@ -42,9 +42,8 @@
 	})
 
 	const { data: bookmarkFolders, refresh: refreshBookmarkFolders } =
-		await useFetch('/api/bookmarkFolders', {
-			// @ts-expect-error - this is a valid option
-			headers: useRequestHeaders(['cookie']),
+		await useFetch('/api/v2/bookmark/folder/list', {
+			headers: useRequestHeaders(['cookie']) as Record<string, any>,
 		})
 
 	const state = reactive({
@@ -52,19 +51,23 @@
 	})
 
 	const handleBookmarkFolderUpdate = async (value: BookmarkFolderItem) => {
-		const { data, error } = await useFetch('/api/bookmarkFolders', {
-			method: 'POST',
-			// @ts-expect-error - this is a valid option
-			headers: useRequestHeaders(['cookies']),
-			body: {
-				bookmarkFolder: {
-					id: value.id,
-					name: value.name,
-					icon: value.icon,
-					user: value.user,
+		const { data, error } = await useFetch(
+			'/api/v2/bookmark/folder/createOrUpdate',
+			{
+				method: 'POST',
+				headers: useRequestHeaders(['cookies']) as Record<string, any>,
+				body: {
+					bookmarkFolder: {
+						id: value.id,
+						name: value.name,
+						icon: value.icon,
+						user: {
+							authId: value.user?.authId,
+						},
+					},
 				},
-			},
-		})
+			}
+		)
 		if (error.value || !data.value) {
 			return console.error(error.value)
 		}
@@ -72,14 +75,15 @@
 	}
 
 	const handleBookmarkFolderDelete = async (value: BookmarkFolderItem) => {
-		const { data, error } = await useFetch('/api/bookmarkFolderDelete', {
+		const { data, error } = await useFetch('/api/v2/bookmark/folder/delete', {
 			method: 'POST',
-			// @ts-expect-error - this is a valid option
-			headers: useRequestHeaders(['cookies']),
+			headers: useRequestHeaders(['cookies']) as Record<string, any>,
 			body: {
 				bookmarkFolder: {
 					id: value.id,
-					user: value.user,
+					user: {
+						authId: value.user?.authId,
+					},
 				},
 			},
 		})
