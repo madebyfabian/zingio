@@ -58,8 +58,8 @@ export default defineEventHandler(async event => {
 		'this is a test. it does everything I would do in the feed/home.ts, instead of actually getting data.'
 	)
 	console.log(+new Date(), 'start')
-	const serverAuthUser = await serverSupabaseUser(event)
-	if (!serverAuthUser) return sendError(event, createError({ statusCode: 401 }))
+	/*const serverAuthUser = await serverSupabaseUser(event)
+	if (!serverAuthUser) return sendError(event, createError({ statusCode: 401 }))*/
 
 	try {
 		/*return await query.run(edgeDB, {
@@ -70,7 +70,7 @@ export default defineEventHandler(async event => {
 		return true
 	} catch (error) {
 		console.error(error)
-		return sendError(event, createError({ statusCode: 500 }))
 		console.log(+new Date(), 'end')
+		return sendError(event, createError({ statusCode: 500 }))
 	}
 })
