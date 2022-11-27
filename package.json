@@ -11,6 +11,7 @@
 		"generate-types:edgedb": "npx @edgedb/generate edgeql-js",
 		"edgedb-migration:create": "edgedb migration create",
 		"edgedb-migration:apply": "edgedb migrate",
+		"edgedb-ui": "edgedb -I digitalocean ui",
 		"prebuild": "npx @edgedb/generate edgeql-js --target esm"
 	},
 	"devDependencies": {

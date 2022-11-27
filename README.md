@@ -73,3 +73,7 @@ npm start
 ### After changing a `dbschema/*.esdl` file
 
 - `npm run edgedb-migrate`
+
+## Info
+
+`node-fetch@2` in `devDependencies` is required due to a bug where it would otherwise use `node-fetch@3` and because this is esm, it doesn't work with the `edgedb` package. See: https://discord.com/channels/841451783728529451/1046195371933696069/1046206050266787911
